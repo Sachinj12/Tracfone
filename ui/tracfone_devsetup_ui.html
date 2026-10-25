@@ -1,0 +1,312 @@
+<!-- Device Setup add-on page. Injected into tracfone_web_ui.html by backend/tracfone_devsetup_backend.py.
+     Uses the console's own classes and theme variables, so it follows Classic / Dark / Light / Royal Gold. -->
+<style>
+#v-dev{overflow:auto;grid-template-rows:minmax(0,1fr)}
+#v-dev [hidden]{display:none!important}
+#v-dev .dv-panel{width:100%;max-width:1180px;margin:0 auto;min-height:0}
+#v-dev .dv-sub{color:var(--m);font-size:12px}
+.dv-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(270px,330px) minmax(0,1fr);gap:14px}
+.dv-side,.dv-main{display:flex;flex-direction:column;gap:12px;min-height:0}
+.dv-note{display:block;margin-top:6px;color:var(--m);font-size:11.5px;line-height:1.4;min-height:16px}
+.dv-list{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:12px;padding-right:4px}
+.dv-gl{display:block;margin:0 0 5px}
+.dv-act{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1px 8px;align-items:center;width:100%;text-align:left;padding:8px 12px;border-radius:12px;margin:0 0 5px}
+.dv-act .dv-t{font-size:12.5px}
+.dv-act small{grid-column:1;color:var(--m);font-weight:400;font-size:11px;line-height:1.3}
+.dv-act .dv-tag{grid-column:2;grid-row:1 / span 2}
+.dv-act.on{background:var(--ch);border-color:var(--ac)}
+.dv-act.danger .dv-t{color:var(--err)}
+.dv-tag{display:inline-block;font-size:9.5px;letter-spacing:.5px;font-weight:700;color:var(--m);border:1px solid var(--bd);border-radius:99px;padding:1px 8px;white-space:nowrap}
+.dv-tag.w{color:var(--err);border-color:var(--err)}
+.dv-card{padding:14px;border:1px solid var(--bd);border-radius:14px;background:var(--inp);display:flex;flex-direction:column;gap:10px}
+.dv-ttl{display:flex;align-items:center;gap:10px;font-size:15px}
+.dv-hint{margin:0;color:var(--m);font-size:12px}
+.dv-empty{color:var(--m);font-size:12.5px;padding:6px 0}
+.dv-warn{margin:0;padding:9px 12px;border-radius:10px;border:1px solid var(--warn);color:var(--warn);font-size:12px;line-height:1.4}
+.dv-warn.wipe{border-color:var(--err);color:var(--err)}
+.dv-chips{display:flex;flex-wrap:wrap;gap:6px}
+.dv-chip{border-radius:99px;padding:6px 14px}
+.dv-chip.on{background:var(--b2);color:var(--bt);border-color:var(--b2)}
+#dv-run.arm{background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,0) 52%),linear-gradient(var(--s1),var(--s2))}
+#dv-stop:not(:disabled){color:var(--err);border-color:var(--err)}
+.dv-out{display:flex;flex-direction:column;gap:8px;flex:1;min-height:0}
+.dv-out .ph label{margin:0}
+.dv-log{flex:1;min-height:220px;overflow:auto;border-radius:12px;background:var(--log);border:1px solid var(--bd);padding:12px;font:12.5px/1.6 Consolas,"Cascadia Mono",monospace;white-space:pre-wrap;word-break:break-word}
+.dv-log .k{color:var(--ok)}.dv-log .e{color:var(--err)}.dv-log .w{color:var(--warn)}.dv-log .s{color:var(--ac)}.dv-log .m{color:var(--m)}
+.dv-bar{height:3px;border-radius:3px;background:var(--bd);overflow:hidden;opacity:0;transition:opacity .2s}
+.dv-bar.on{opacity:1}
+.dv-bar:after{content:"";display:block;height:100%;width:35%;background:linear-gradient(90deg,var(--ac),var(--b1));animation:dvb 1.1s ease-in-out infinite alternate}
+@keyframes dvb{from{transform:translateX(-100%)}to{transform:translateX(290%)}}
+.st.run{color:var(--ac)}
+@media(max-width:1000px){.dv-body{grid-template-columns:1fr}}
+</style>
+
+<div class="view" id="v-dev"><section class="panel box dv-panel">
+  <div class="ph"><h2>DEVICE SETUP</h2><span class="dv-sub">Carrier, SKU, SIM, radio and reboot tools over ADB / fastboot</span></div>
+  <div class="dv-body">
+    <div class="dv-side">
+      <div>
+        <label for="dv-dev">DEVICE <span class="dv-tag" id="dv-mode" hidden></span></label>
+        <div class="row"><select id="dv-dev"></select><button id="dv-rf" title="Refresh devices" aria-label="Refresh devices">⟳</button></div>
+        <span class="dv-note" id="dv-note"></span>
+      </div>
+      <div class="dv-list" id="dv-acts" role="group" aria-label="Actions"></div>
+    </div>
+    <div class="dv-main">
+      <div class="dv-card" id="dv-card">
+        <div class="dv-empty" id="dv-empty">Choose a device, then pick an action on the left.</div>
+        <div id="dv-form" hidden style="display:flex;flex-direction:column;gap:10px">
+          <div class="dv-ttl"><b id="dv-at"></b><span class="dv-tag" id="dv-am"></span></div>
+          <p class="dv-hint" id="dv-ah"></p>
+          <div id="dv-val"></div>
+          <p class="dv-warn" id="dv-aw" hidden></p>
+          <div class="row"><button class="go" id="dv-run">▶ Run</button><button id="dv-stop" disabled>■ Stop</button></div>
+        </div>
+      </div>
+      <div class="dv-out">
+        <div class="ph"><label>OUTPUT</label><b class="st" id="dv-st">Idle</b><span style="margin-left:auto"></span><button id="dv-copy">Copy</button><button id="dv-clr">Clear</button></div>
+        <div class="dv-bar" id="dv-bar"></div>
+        <div class="dv-log" id="dv-log" role="log" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+</section></div>
+
+<script>
+(function () {
+  'use strict';
+  var v = document.getElementById('v-dev'), nav = document.querySelector('nav');
+  if (!v || !nav || window.__dvLoaded) return;
+  window.__dvLoaded = true;
+  var setv = document.getElementById('v-set');            // sit next to the other pages
+  if (setv && setv.parentNode) setv.parentNode.insertBefore(v, setv.nextSibling);
+
+  var API = '/api/devsetup';
+  var GROUPS = [
+    ['CARRIER, SKU & SIM', ['Change ro.carrier', 'Change SKU', 'Change SIM / eSIM Config', 'Change RADIO']],
+    ['SETUP & BATTERY', ['Skip Setup Wizard (Bypass)', 'Change Battery Level']],
+    ['REBOOT MODES', ['Reboot Normal', 'Reboot to Bootloader', 'Reboot Factory', 'Reboot BP_Tools']],
+    ['WIPE', ['Fastboot Erase']]
+  ];
+  var HINT = {
+    'Change ro.carrier': 'Set the carrier, then wipe the phone',
+    'Change SKU': 'Set the SKU, then reset modem state',
+    'Change SIM / eSIM Config': 'Choose a SIM / eSIM setup',
+    'Change RADIO': 'Set the radio value, then reset modem state',
+    'Skip Setup Wizard (Bypass)': 'Skip first-run setup in a chosen language',
+    'Change Battery Level': 'Set the reported battery percentage',
+    'Reboot Normal': 'Restart into Android',
+    'Reboot to Bootloader': 'Restart into fastboot mode',
+    'Reboot Factory': 'Restart into Factory mode',
+    'Reboot BP_Tools': 'Restart into BP Tools mode',
+    'Fastboot Erase': 'Erase user data, FRP and modem state'
+  };
+  var S = { actions: [], devices: [], errors: [], serial: '', want: '', touched: false, action: '',
+            job: null, since: 0, pollT: null, devT: null, armed: false, armT: null, loaded: false };
+
+  function q(id) { return document.getElementById(id); }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function say(msg, bad) { if (typeof toast === 'function') toast(msg, bad); }
+  function api(path, opts) {
+    return fetch(API + path, opts).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (d) {
+        if (!r.ok) throw new Error(d.error || ('Request failed (' + r.status + ')'));
+        return d;
+      });
+    });
+  }
+  function post(path, body) { return api(path, { method: 'POST', body: JSON.stringify(body) }); }
+  function curDev() { return S.devices.filter(function (d) { return d.serial === S.serial; })[0]; }
+  function curAct() { return S.actions.filter(function (a) { return a.label === S.action; })[0]; }
+
+  /* ---------- data ---------- */
+  function loadActions() {
+    return api('/actions').then(function (d) { S.actions = d.actions; S.loaded = true; renderActions(); })
+      .catch(function (e) { setStatus('Failed', 'failed'); line('[ERROR] ' + e.message); });
+  }
+  function loadDevices() {
+    return api('/devices').then(function (d) { S.devices = d.devices; S.errors = d.errors || []; renderDevices(); })
+      .catch(function (e) { S.errors = [e.message]; renderDevices(); });
+  }
+
+  /* ---------- device ---------- */
+  function renderDevices() {
+    var sel = q('dv-dev'), ids = S.devices.map(function (d) { return d.serial; });
+    sel.innerHTML = '';
+    if (!ids.length) { var o = el('option', null, 'No device detected'); o.value = ''; sel.appendChild(o); }
+    S.devices.forEach(function (d) { var o = el('option', null, d.serial + '  ·  ' + d.mode); o.value = d.serial; sel.appendChild(o); });
+    var dash = (q('dev') || {}).value;                       // dashboard's ADB device, used as the starting pick
+    if (S.want && ids.indexOf(S.want) !== -1) S.serial = S.want;
+    else if (ids.indexOf(S.serial) === -1) S.serial = (!S.touched && dash && ids.indexOf(dash) !== -1) ? dash : (ids[0] || '');
+    sel.value = S.serial;
+    afterDevice();
+  }
+  function afterDevice() {
+    var d = curDev(), note = q('dv-note'), tag = q('dv-mode');
+    tag.hidden = !d; if (d) tag.textContent = d.mode;
+    if (S.errors.length) note.textContent = S.errors.join('. ') + '.';
+    else if (!d) note.textContent = 'No device detected. Connect over USB with debugging on, or boot the phone to fastboot, then press ⟳.';
+    else if (d.mode === 'UNAUTHORIZED') note.textContent = 'Accept the USB debugging prompt on the phone, then press ⟳.';
+    else if (!d.ready) note.textContent = 'This device is ' + d.mode.toLowerCase() + ' and cannot take commands yet.';
+    else if (d.mode === 'ADB') note.textContent = 'Android is running. Fastboot actions need fastboot mode: use Reboot to Bootloader.';
+    else note.textContent = 'Fastboot mode. ADB actions need Android: use Reboot Normal.';
+    if (d && d.job_id && !S.job) attach(d.job_id);          // pick up a task still running after a page reload
+    var a = curAct();
+    if (a && !(d && d.ready && a.modes.indexOf(d.mode) !== -1)) { S.action = ''; disarm(); }
+    renderActions(); renderDetail();
+  }
+
+  /* ---------- actions ---------- */
+  function renderActions() {
+    var box = q('dv-acts'), d = curDev(), mode = d && d.ready ? d.mode : null, by = {}, used = {};
+    S.actions.forEach(function (a) { by[a.label] = a; });
+    box.innerHTML = '';
+    var groups = GROUPS.map(function (g) { return [g[0], g[1].filter(function (l) { return by[l]; })]; });
+    var rest = S.actions.map(function (a) { return a.label; }).filter(function (l) {
+      return !GROUPS.some(function (g) { return g[1].indexOf(l) !== -1; });
+    });
+    if (rest.length) groups.push(['OTHER', rest]);
+    groups.forEach(function (g) {
+      if (!g[1].length) return;
+      var wrap = el('div'); wrap.appendChild(el('label', 'dv-gl', g[0]));
+      g[1].forEach(function (l) {
+        var a = by[l], ok = !!mode && a.modes.indexOf(mode) !== -1;
+        var b = el('button', 'dv-act' + (a.wipes ? ' danger' : '') + (a.label === S.action ? ' on' : ''));
+        b.type = 'button'; b.dataset.a = a.label; b.disabled = !ok; b.setAttribute('aria-pressed', a.label === S.action ? 'true' : 'false');
+        if (!ok) b.title = 'Needs ' + a.modes.join(' or ').toLowerCase() + ' mode';
+        b.appendChild(el('span', 'dv-t', a.label));
+        b.appendChild(el('span', 'dv-tag' + (a.wipes ? ' w' : ''), a.wipes ? 'WIPES' : a.modes.join(' · ')));
+        b.appendChild(el('small', null, HINT[a.label] || ''));
+        wrap.appendChild(b);
+      });
+      box.appendChild(wrap);
+    });
+  }
+  function renderDetail() {
+    var a = curAct();
+    q('dv-empty').hidden = !!a; q('dv-form').hidden = !a;
+    if (!a) return;
+    q('dv-at').textContent = a.label;
+    q('dv-am').textContent = a.modes.join(' · ');
+    q('dv-ah').textContent = HINT[a.label] || '';
+    var w = q('dv-aw'); w.hidden = !a.warn; w.textContent = a.warn || ''; w.className = 'dv-warn' + (a.wipes ? ' wipe' : '');
+    var box = q('dv-val'); box.innerHTML = '';
+    if (a.kind !== 'none') {
+      box.appendChild(el('label', null, (a.prompt || 'Value').toUpperCase()));
+      if (a.kind === 'choice') {
+        var g = el('div', 'dv-chips'); g.setAttribute('role', 'radiogroup');
+        a.options.forEach(function (opt, i) {
+          var c = el('button', 'dv-chip', opt); c.type = 'button'; c.setAttribute('role', 'radio');
+          var on = !a.explicit_choice && i === 0; c.classList.toggle('on', on); c.setAttribute('aria-checked', on ? 'true' : 'false');
+          g.appendChild(c);
+        });
+        g.onclick = function (e) {
+          var c = e.target.closest('.dv-chip'); if (!c) return;
+          [].forEach.call(g.children, function (x) { var on = x === c; x.classList.toggle('on', on); x.setAttribute('aria-checked', on ? 'true' : 'false'); });
+          disarm();
+        };
+        box.appendChild(g);
+      } else {
+        var inp = el('input'); inp.id = 'dv-param'; inp.maxLength = 64; inp.autocomplete = 'off';
+        inp.type = a.kind === 'number' ? 'number' : 'text';
+        if (a.kind === 'number') { inp.min = a.min; inp.max = a.max; inp.step = 1; inp.inputMode = 'numeric'; }
+        inp.placeholder = a.kind === 'number' ? a.min + ' – ' + a.max : '';
+        inp.oninput = disarm; box.appendChild(inp);
+      }
+    }
+    resetRunLabel(); updateButtons();
+  }
+  function getParam() {
+    var a = curAct(); if (!a || a.kind === 'none') return null;
+    if (a.kind === 'choice') { var c = q('dv-val').querySelector('.dv-chip.on'); return c ? c.textContent : ''; }
+    var i = q('dv-param'); return i ? i.value.trim() : '';
+  }
+  function updateButtons() {
+    var d = curDev(), a = curAct();
+    q('dv-run').disabled = !(d && d.ready && a) || !!S.job;
+    q('dv-stop').disabled = !S.job;
+  }
+
+  /* ---------- run / stop ---------- */
+  function resetRunLabel() { var a = curAct(), b = q('dv-run'); b.classList.remove('arm'); b.textContent = a ? '▶ Run ' + a.label : '▶ Run'; }
+  function disarm() { S.armed = false; clearTimeout(S.armT); resetRunLabel(); }
+  function onRun() {
+    var a = curAct(); if (!a) return;
+    var p = getParam();
+    if (a.kind !== 'none' && !p) { say(a.kind === 'choice' ? 'Choose an option first.' : 'Enter a value first.', true); return; }
+    if (a.warn && !S.armed) {
+      S.armed = true; var b = q('dv-run'); b.classList.add('arm');
+      b.textContent = a.wipes ? 'Click again — this wipes the phone' : 'Click again to confirm';
+      S.armT = setTimeout(disarm, 5000); return;
+    }
+    disarm();
+    post('/run', { serial: S.serial, action: a.label, param: p })
+      .then(function (r) { q('dv-log').textContent = ''; attach(r.job_id); })
+      .catch(function (e) { say(e.message, true); line('[ERROR] ' + e.message); });
+  }
+  function onStop() { q('dv-stop').disabled = true; post('/stop', { serial: S.serial }).catch(function (e) { say(e.message, true); }); }
+
+  /* ---------- job polling ---------- */
+  var LABEL = { running: ['Running…', 'run'], done: ['Finished', 'complete'], warn: ['Finished with errors — check the log', 'stopped'],
+                error: ['Failed', 'failed'], stopped: ['Stopped', 'stopped'] };
+  function setStatus(text, cls) { var s = q('dv-st'); s.textContent = text; s.className = 'st ' + (cls || ''); q('dv-bar').classList.toggle('on', cls === 'run'); }
+  function attach(id) {
+    S.job = id; S.since = 0; q('dv-log').textContent = '';
+    setStatus(LABEL.running[0], 'run'); updateButtons();
+    clearInterval(S.pollT); S.pollT = setInterval(poll, 700); poll();
+  }
+  function poll() {
+    if (!S.job) return;
+    api('/job?id=' + encodeURIComponent(S.job) + '&since=' + S.since).then(function (d) {
+      d.lines.forEach(line); S.since = d.next;
+      var l = LABEL[d.status] || [d.status, '']; setStatus(l[0], l[1]);
+      if (d.status !== 'running') { endJob(); loadDevices(); }
+    }).catch(function (e) { setStatus(e.message, 'failed'); endJob(); });
+  }
+  function endJob() { clearInterval(S.pollT); S.job = null; updateButtons(); }
+
+  /* ---------- log ---------- */
+  function line(t) {
+    var log = q('dv-log'), near = log.scrollHeight - log.scrollTop - log.clientHeight < 40, s = el('div');
+    if (/^\$ /.test(t)) s.className = 's';
+    else if (/\[ERROR\]|FAILED|❌/i.test(t)) s.className = 'e';
+    else if (/✅|✓/.test(t)) s.className = 'k';
+    else if (/⚠/.test(t)) s.className = 'w';
+    s.textContent = t; log.appendChild(s);
+    if (near) log.scrollTop = log.scrollHeight;
+  }
+
+  /* ---------- wiring ---------- */
+  q('dv-dev').onchange = function () { S.touched = true; S.want = S.serial = this.value; disarm(); afterDevice(); };
+  q('dv-rf').onclick = loadDevices;
+  q('dv-acts').onclick = function (e) {
+    var b = e.target.closest('.dv-act'); if (!b || b.disabled) return;
+    S.action = b.dataset.a; disarm(); renderActions(); renderDetail();
+  };
+  q('dv-run').onclick = onRun;
+  q('dv-stop').onclick = onStop;
+  q('dv-clr').onclick = function () { q('dv-log').textContent = ''; };
+  q('dv-copy').onclick = function () { if (navigator.clipboard) navigator.clipboard.writeText(q('dv-log').innerText).then(function () { say('Log copied.'); }); };
+
+  /* ---------- nav tab (between Run History and Settings) ---------- */
+  var btn = document.createElement('button');
+  btn.dataset.v = 'dev';
+  btn.innerHTML = '<b><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></b>Device Setup';
+  var settingsBtn = nav.querySelector('[data-v="set"]');
+  nav.insertBefore(btn, settingsBtn || null);
+
+  function open() {
+    if (!S.loaded) loadActions();
+    loadDevices();
+    clearInterval(S.devT);
+    S.devT = setInterval(function () { if (!S.job) loadDevices(); }, 5000);
+  }
+  function close() { clearInterval(S.devT); }
+  nav.addEventListener('click', function (e) {              // the console's own handler has already switched the other pages
+    var b = e.target.closest('[data-v]'); if (!b) return;
+    var on = b.dataset.v === 'dev';
+    v.classList.toggle('on', on);
+    if (on) open(); else close();
+  });
+})();
+</script>
