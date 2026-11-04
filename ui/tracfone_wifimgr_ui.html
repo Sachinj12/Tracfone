@@ -1,0 +1,371 @@
+<!-- Wi-Fi Manager add-on page. Injected into tracfone_web_ui.html by backend/tracfone_wifimgr_backend.py.
+     Uses the console's own classes and theme variables, so it follows Classic / Dark / Light / Royal Gold. -->
+<style>
+#v-wifi{overflow:auto;grid-template-rows:minmax(0,1fr)}
+#v-wifi [hidden],.wm-modal[hidden]{display:none!important}
+#v-wifi .wm-panel{width:100%;max-width:1180px;margin:0 auto;min-height:0;height:100%;display:flex;flex-direction:column;gap:10px}
+.wm-sub{color:var(--m);font-size:12px}
+.wm-banner{flex:none;margin:0;padding:6px 12px;border-radius:10px;border:1px solid var(--warn);color:var(--warn);font-size:11.5px;line-height:1.35}
+.wm-body{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(270px,360px) minmax(0,1fr);gap:14px}
+.wm-side,.wm-main{display:flex;flex-direction:column;gap:12px;min-height:0}
+.wm-list{flex:1;min-height:90px;overflow:auto;display:flex;flex-direction:column;gap:6px;padding-right:4px}
+.wm-empty{color:var(--m);font-size:12.5px;padding:6px 0}
+.wm-net{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:1px 6px;align-items:center;padding:8px 10px 8px 12px;border-radius:12px;border:1px solid var(--bd);background:var(--inp);cursor:pointer}
+.wm-net.on{background:var(--ch);border-color:var(--ac)}
+.wm-net .wm-t{font-size:12.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wm-net small{grid-column:1;color:var(--m);font-size:11px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wm-net button{grid-row:1 / span 2;padding:3px 8px;font-size:12px}
+.wm-net .wm-ed{grid-column:2}.wm-net .wm-dl{grid-column:3}
+.wm-tag{display:inline-block;font-size:9.5px;letter-spacing:.5px;font-weight:700;color:var(--m);border:1px solid var(--bd);border-radius:99px;padding:1px 8px;white-space:nowrap}
+.wm-card{flex:none;padding:10px 14px;border:1px solid var(--bd);border-radius:14px;background:var(--inp);display:flex;flex-direction:column;gap:8px}
+.wm-devs{display:flex;flex-direction:column;gap:6px;max-height:34vh;overflow:auto;padding-right:2px}
+.wm-dev{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:8px 12px;border:1px solid var(--bd);border-radius:12px}
+.wm-dev.on{border-color:var(--ac);background:var(--ch)}
+.wm-dev input{width:18px;height:18px;padding:0;accent-color:var(--ac);grid-row:1 / span 2}
+.wm-dev .wm-sn{font:600 12.5px Consolas,"Cascadia Mono",monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wm-dev .wm-st{grid-column:2;font-size:11.5px;color:var(--m);line-height:1.3}
+.wm-dev .wm-st.ok{color:var(--ok)}.wm-dev .wm-st.bad{color:var(--err)}.wm-dev .wm-st.run{color:var(--ac)}
+.wm-dev button{grid-column:3;grid-row:1 / span 2;padding:3px 10px;font-size:12px}
+.wm-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.wm-actions .go{flex:none;width:auto;padding:0 20px}
+#wm-off:not(:disabled){color:var(--err);border-color:var(--err)}
+.wm-out{display:flex;flex-direction:column;gap:8px;flex:1;min-height:0}
+.wm-out .ph label{margin:0}
+.wm-log{flex:1;min-height:90px;overflow:auto;border-radius:12px;background:var(--log);border:1px solid var(--bd);padding:12px;font:12.5px/1.6 Consolas,"Cascadia Mono",monospace;white-space:pre-wrap;word-break:break-word}
+.wm-log .k{color:var(--ok)}.wm-log .e{color:var(--err)}.wm-log .w{color:var(--warn)}.wm-log .s{color:var(--ac)}.wm-log .m{color:var(--m)}
+/* dialogs: top level of the page, so the panels' glass blur cannot distort them */
+.wm-modal{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.58);backdrop-filter:blur(3px)}
+.wm-sheet{width:min(520px,100%);max-height:100%;overflow:auto;display:flex;flex-direction:column;gap:12px;padding:22px 24px;border-radius:20px;background:var(--inp);color:var(--t);border:1px solid var(--bd);box-shadow:var(--sh)}
+.wm-sheet h3{margin:0;font-size:20px}
+.wm-hint{margin:0;color:var(--m);font-size:12px;line-height:1.45}
+.wm-err{min-height:16px;margin:0;color:var(--err);font-size:12px}
+.wm-foot{display:flex;justify-content:flex-end;gap:10px}
+.wm-chk{display:flex;align-items:center;gap:10px;margin:0;font-size:13px;color:var(--t);letter-spacing:0;text-transform:none;cursor:pointer}
+.wm-chk input{width:18px;height:18px;padding:0;flex:none;accent-color:var(--ac)}
+.wm-drop{display:flex;align-items:center;justify-content:center;text-align:center;min-height:120px;padding:14px;border:2px dashed var(--bd);border-radius:14px;color:var(--m);font-size:12.5px;line-height:1.5;cursor:pointer}
+.wm-drop.hot{border-color:var(--ac);background:var(--ch)}
+.wm-drop img{max-width:100%;max-height:180px;border-radius:8px}
+@media(max-width:1000px){.wm-body{grid-template-columns:1fr}}
+</style>
+
+<div class="view" id="v-wifi"><section class="panel box wm-panel">
+  <div class="ph"><h2>WI-FI</h2><span class="wm-sub">Saved networks &middot; connect or turn Wi-Fi off on ADB phones</span></div>
+  <p class="wm-banner" id="wm-ban" hidden></p>
+  <div class="wm-body">
+    <div class="wm-side">
+      <div class="ph"><label>SAVED NETWORKS</label><span style="margin-left:auto"></span><button id="wm-add" type="button">＋ Add</button><button id="wm-qr" type="button">▣ From QR</button></div>
+      <div class="wm-list" id="wm-nets" role="listbox" aria-label="Saved networks"></div>
+    </div>
+    <div class="wm-main">
+      <div class="wm-card">
+        <div class="ph"><label>PHONES</label><span class="wm-tag" id="wm-count"></span><span style="margin-left:auto"></span><button id="wm-rf" type="button" title="Refresh devices" aria-label="Refresh devices">⟳</button><button id="wm-all" type="button">Select all</button><button id="wm-none" type="button">Clear</button></div>
+        <div class="wm-devs" id="wm-devs"></div>
+        <div class="wm-actions">
+          <button class="go" id="wm-go" type="button" disabled>▶ Connect</button>
+          <button id="wm-off" type="button" disabled>⏻ Turn Wi-Fi off</button>
+          <span class="wm-hint" id="wm-hint">Pick a saved network and tick the phones to connect.</span>
+        </div>
+      </div>
+      <div class="wm-out">
+        <div class="ph"><label>OUTPUT</label><span style="margin-left:auto"></span><button id="wm-copy" type="button">Copy</button><button id="wm-clr" type="button">Clear</button></div>
+        <div class="wm-log" id="wm-log" role="log" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+</section></div>
+
+<div class="wm-modal" id="wm-fm" hidden><div class="wm-sheet" role="dialog" aria-modal="true" aria-labelledby="wm-fm-t">
+  <h3 id="wm-fm-t">Add network</h3>
+  <div><label for="wm-f-label">NAME</label><input id="wm-f-label" maxlength="64" autocomplete="off" placeholder="Shown in this list (defaults to the SSID)"></div>
+  <div><label for="wm-f-ssid">SSID</label><input id="wm-f-ssid" maxlength="32" autocomplete="off" spellcheck="false"></div>
+  <div><label for="wm-f-sec">SECURITY</label><select id="wm-f-sec"></select></div>
+  <div id="wm-f-ubox" hidden><label for="wm-f-user">USERNAME (EAP)</label><input id="wm-f-user" autocomplete="off" spellcheck="false"></div>
+  <div id="wm-f-pbox"><label for="wm-f-pass">PASSWORD</label>
+    <div class="row"><input id="wm-f-pass" type="password" autocomplete="new-password" spellcheck="false"><button id="wm-f-eye" type="button" title="Show / hide" aria-label="Show or hide password">👁</button></div>
+    <p class="wm-hint" id="wm-f-ph" style="margin-top:6px" hidden>Leave blank to keep the saved password.</p></div>
+  <label class="wm-chk"><input type="checkbox" id="wm-f-hid"> Hidden network</label>
+  <p class="wm-err" id="wm-f-err" role="alert"></p>
+  <div class="wm-foot"><button id="wm-f-cancel" type="button">Cancel</button><button class="go" id="wm-f-save" type="button" style="flex:none;width:auto;padding:0 22px">Save</button></div>
+</div></div>
+
+<div class="wm-modal" id="wm-qm" hidden><div class="wm-sheet" role="dialog" aria-modal="true" aria-labelledby="wm-qm-t">
+  <h3 id="wm-qm-t">Add from QR image</h3>
+  <p class="wm-hint">Choose, drop or paste (Ctrl+V) a screenshot or photo of the router's Wi-Fi QR code. The network is saved with its password; the password is never shown.</p>
+  <div class="wm-drop" id="wm-q-drop" tabindex="0" role="button">Click to choose an image, or drop / paste it here</div>
+  <input type="file" id="wm-q-file" accept="image/*" hidden>
+  <div><label for="wm-q-label">NAME (OPTIONAL)</label><input id="wm-q-label" maxlength="64" autocomplete="off" placeholder="Defaults to the SSID in the QR code"></div>
+  <p class="wm-err" id="wm-q-err" role="alert"></p>
+  <div class="wm-foot"><button id="wm-q-cancel" type="button">Cancel</button><button class="go" id="wm-q-save" type="button" style="flex:none;width:auto;padding:0 22px" disabled>Read &amp; save</button></div>
+</div></div>
+
+<script>
+(function () {
+  'use strict';
+  var v = document.getElementById('v-wifi'), nav = document.querySelector('nav');
+  if (!v || !nav || window.__wmLoaded) return;
+  window.__wmLoaded = true;
+  var setv = document.getElementById('v-set');                 // sit next to the other pages
+  if (setv && setv.parentNode) setv.parentNode.insertBefore(v, setv.nextSibling);
+
+  var API = '/api/wifimgr';
+  var S = { nets: [], types: [], sel: null, devs: [], checked: {}, busy: {}, notes: {}, timer: null, edit: null, qrImg: null, feat: {} };
+  function q(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+  function api(method, path, body) {
+    var o = { method: method, headers: {} };
+    if (method === 'POST') { o.headers['X-Wifimgr'] = '1'; o.headers['Content-Type'] = 'application/json'; o.body = JSON.stringify(body || {}); }
+    return fetch(API + path, o).then(function (r) {
+      return r.json().catch(function () { return null; }).then(function (d) {
+        if (!r.ok) throw new Error((d && d.error) || ('HTTP ' + r.status));
+        return d;
+      });
+    });
+  }
+  function toast(t, bad) { if (window.toast) try { window.toast(t, bad); } catch (e) {} }
+
+  /* ---------- log ---------- */
+  var logEl = q('wm-log');
+  function say(text, cls) {
+    var d = document.createElement('div'); if (cls) d.className = cls;
+    var t = new Date(), p = function (n) { return (n < 10 ? '0' : '') + n; };
+    d.textContent = p(t.getHours()) + ':' + p(t.getMinutes()) + ':' + p(t.getSeconds()) + '  ' + text;
+    logEl.appendChild(d); logEl.scrollTop = logEl.scrollHeight;
+  }
+  q('wm-clr').onclick = function () { logEl.innerHTML = ''; };
+  q('wm-copy').onclick = function () { if (navigator.clipboard) navigator.clipboard.writeText(logEl.innerText).then(function () { toast('Log copied.'); }); };
+
+  /* ---------- networks ---------- */
+  function netById(id) { for (var i = 0; i < S.nets.length; i++) if (S.nets[i].id === id) return S.nets[i]; return null; }
+  function renderNets() {
+    var box = q('wm-nets');
+    if (!S.nets.length) { box.innerHTML = '<div class="wm-empty">No saved networks yet. Use “＋ Add” or “▣ From QR”.</div>'; updateButtons(); return; }
+    box.innerHTML = S.nets.map(function (n) {
+      var extra = [n.security_type, n.hidden ? 'hidden' : '', n.source === 'qr' ? 'from QR' : '', n.has_password ? '' : 'no password'].filter(Boolean).join(' · ');
+      return '<div class="wm-net' + (n.id === S.sel ? ' on' : '') + '" data-id="' + n.id + '" role="option" aria-selected="' + (n.id === S.sel) + '">' +
+        '<span class="wm-t">' + esc(n.label) + '</span><button class="wm-ed" type="button" data-ed="' + n.id + '" title="Edit" aria-label="Edit">✎</button><button class="wm-dl" type="button" data-dl="' + n.id + '" title="Delete" aria-label="Delete">🗑</button>' +
+        '<small>' + esc(n.ssid) + ' · ' + esc(extra) + '</small></div>';
+    }).join('');
+    updateButtons();
+  }
+  q('wm-nets').addEventListener('click', function (e) {
+    var ed = e.target.closest('[data-ed]'), dl = e.target.closest('[data-dl]'), row = e.target.closest('[data-id]');
+    if (ed) { openForm(netById(+ed.dataset.ed)); return; }
+    if (dl) {
+      var n = netById(+dl.dataset.dl); if (!n) return;
+      if (!window.confirm('Delete saved network “' + n.label + '”?')) return;
+      api('POST', '/networks/delete', { id: n.id }).then(function () {
+        if (S.sel === n.id) S.sel = null;
+        say('Deleted network “' + n.label + '”.', 'm'); loadStatus();
+      }).catch(function (er) { say('✗ ' + er.message, 'e'); });
+      return;
+    }
+    if (row) { S.sel = +row.dataset.id; renderNets(); }
+  });
+  function loadStatus() {
+    return api('GET', '/status').then(function (d) {
+      S.nets = d.networks || []; S.types = d.security_types || []; S.feat = d.features || {};
+      if (S.sel !== null && !netById(S.sel)) S.sel = null;
+      if (S.sel === null && S.nets.length === 1) S.sel = S.nets[0].id;
+      var miss = [];
+      if (!S.feat.cryptography) miss.push('“cryptography” (needed to save passwords)');
+      if (!S.feat.opencv) miss.push('“opencv-python-headless” and “numpy” (needed for QR images)');
+      var ban = q('wm-ban');
+      ban.hidden = !miss.length;
+      if (miss.length) ban.textContent = 'Missing Python package(s): ' + miss.join(' and ') + '. Run Setup_Tracfone_One_Time_Clean.bat or: py -m pip install cryptography opencv-python-headless numpy';
+      renderNets();
+    }).catch(function (er) { q('wm-nets').innerHTML = '<div class="wm-empty">Could not load networks: ' + esc(er.message) + '</div>'; });
+  }
+
+  /* ---------- add / edit dialog ---------- */
+  var fm = q('wm-fm');
+  function syncSec() {
+    var t = q('wm-f-sec').value;
+    q('wm-f-ubox').hidden = t !== 'EAP';
+    q('wm-f-pbox').hidden = t === 'nopass';
+  }
+  q('wm-f-sec').onchange = syncSec;
+  q('wm-f-eye').onclick = function () { var p = q('wm-f-pass'); p.type = p.type === 'password' ? 'text' : 'password'; };
+  function openForm(net) {
+    S.edit = net || null;
+    q('wm-f-sec').innerHTML = (S.types.length ? S.types : ['WPA2', 'WPA', 'WPA3', 'WEP', 'EAP', 'nopass']).map(function (t) { return '<option value="' + esc(t) + '">' + esc(t === 'nopass' ? 'nopass (open network)' : t) + '</option>'; }).join('');
+    q('wm-fm-t').textContent = net ? 'Edit network' : 'Add network';
+    q('wm-f-label').value = net ? net.label : ''; q('wm-f-ssid').value = net ? net.ssid : '';
+    q('wm-f-sec').value = net ? net.security_type : 'WPA2';
+    q('wm-f-user').value = ''; q('wm-f-pass').value = ''; q('wm-f-pass').type = 'password';
+    q('wm-f-hid').checked = !!(net && net.hidden); q('wm-f-ph').hidden = !net; q('wm-f-err').textContent = '';
+    syncSec(); fm.hidden = false; q('wm-f-ssid').focus();
+  }
+  function closeForm() { fm.hidden = true; S.edit = null; q('wm-f-pass').value = ''; }
+  q('wm-add').onclick = function () { openForm(null); };
+  q('wm-f-cancel').onclick = closeForm;
+  q('wm-f-save').onclick = function () {
+    var sec = q('wm-f-sec').value, user = q('wm-f-user').value, pass = q('wm-f-pass').value;
+    var body = { label: q('wm-f-label').value.trim(), ssid: q('wm-f-ssid').value, security_type: sec, hidden: q('wm-f-hid').checked };
+    if (!body.label) body.label = body.ssid;
+    if (sec === 'EAP') body.username = user;
+    body.password = sec === 'nopass' ? '' : pass;
+    var path = '/networks';
+    if (S.edit) { path = '/networks/update'; body.id = S.edit.id; body.password_provided = sec !== 'nopass' && pass.length > 0; body.username_provided = sec === 'EAP' && user.length > 0; }
+    var btn = q('wm-f-save'); btn.disabled = true; q('wm-f-err').textContent = '';
+    api('POST', path, body).then(function (d) {
+      var n = d.network; S.sel = n.id; closeForm();
+      say((S.edit ? 'Updated' : 'Saved') + ' network “' + n.label + '” (' + n.security_type + (n.hidden ? ', hidden' : '') + ').', 'k');
+      return loadStatus();
+    }).catch(function (er) { q('wm-f-err').textContent = er.message; }).then(function () { btn.disabled = false; });
+  };
+
+  /* ---------- QR dialog ---------- */
+  var qm = q('wm-qm'), drop = q('wm-q-drop');
+  function setQr(file) {
+    q('wm-q-err').textContent = '';
+    if (!file || !/^image\//.test(file.type)) { q('wm-q-err').textContent = 'Please choose an image file.'; return; }
+    if (file.size > 10 * 1024 * 1024) { q('wm-q-err').textContent = 'Image is larger than 10 MB.'; return; }
+    var r = new FileReader();
+    r.onload = function () {
+      S.qrImg = r.result; drop.innerHTML = ''; var im = document.createElement('img'); im.src = r.result; im.alt = 'QR image'; drop.appendChild(im);
+      q('wm-q-save').disabled = false;
+    };
+    r.onerror = function () { q('wm-q-err').textContent = 'The image could not be read.'; };
+    r.readAsDataURL(file);
+  }
+  function openQr() { S.qrImg = null; drop.textContent = 'Click to choose an image, or drop / paste it here'; q('wm-q-label').value = ''; q('wm-q-err').textContent = ''; q('wm-q-save').disabled = true; qm.hidden = false; drop.focus(); }
+  function closeQr() { qm.hidden = true; S.qrImg = null; }
+  q('wm-qr').onclick = openQr;
+  q('wm-q-cancel').onclick = closeQr;
+  drop.onclick = function () { q('wm-q-file').click(); };
+  drop.onkeydown = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); q('wm-q-file').click(); } };
+  q('wm-q-file').onchange = function () { setQr(this.files && this.files[0]); this.value = ''; };
+  drop.ondragover = function (e) { e.preventDefault(); drop.classList.add('hot'); };
+  drop.ondragleave = function () { drop.classList.remove('hot'); };
+  drop.ondrop = function (e) { e.preventDefault(); drop.classList.remove('hot'); setQr(e.dataTransfer.files && e.dataTransfer.files[0]); };
+  document.addEventListener('paste', function (e) {
+    if (qm.hidden || !e.clipboardData) return;
+    var items = e.clipboardData.items || [];
+    for (var i = 0; i < items.length; i++) if (items[i].kind === 'file' && /^image\//.test(items[i].type)) { setQr(items[i].getAsFile()); e.preventDefault(); return; }
+  });
+  q('wm-q-save').onclick = function () {
+    if (!S.qrImg) return;
+    var btn = q('wm-q-save'); btn.disabled = true; q('wm-q-err').textContent = '';
+    api('POST', '/qr', { image: S.qrImg, label: q('wm-q-label').value.trim() }).then(function (d) {
+      var n = d.network; S.sel = n.id; closeQr();
+      say('Saved network “' + n.label + '” from QR (' + n.security_type + (n.hidden ? ', hidden' : '') + ').', 'k');
+      return loadStatus();
+    }).catch(function (er) { q('wm-q-err').textContent = er.message; btn.disabled = false; });
+  };
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (!fm.hidden) closeForm(); else if (!qm.hidden) closeQr();
+  });
+
+  /* ---------- devices ---------- */
+  function anyBusy() { for (var k in S.busy) if (S.busy[k]) return true; return false; }
+  function renderDevs() {
+    var box = q('wm-devs'), list = S.devs;
+    q('wm-count').textContent = list.length + ' connected';
+    if (!list.length) { box.innerHTML = '<div class="wm-empty">No ADB device detected. Connect a phone and press ⟳.</div>'; updateButtons(); return; }
+    box.innerHTML = list.map(function (d) {
+      var st, cls = '', note = S.notes[d.serial];
+      if (S.busy[d.serial]) { st = S.busy[d.serial]; cls = 'run'; }
+      else if (d.busy) { st = 'Busy: ' + d.busy; cls = 'bad'; }
+      else if (note) { st = note.text; cls = note.ok ? 'ok' : 'bad'; }
+      else if (d.wifi_status === 'wifi_connected') { st = '● Wi-Fi: ' + (d.wifi_ssid || 'connected'); cls = 'ok'; }
+      else { st = '○ Not connected to Wi-Fi'; if (d.last_error) st += ' (' + d.last_error + ')'; }
+      return '<div class="wm-dev' + (S.checked[d.serial] ? ' on' : '') + '"><input type="checkbox" data-sn="' + esc(d.serial) + '"' + (S.checked[d.serial] ? ' checked' : '') + (S.busy[d.serial] ? ' disabled' : '') + ' aria-label="Select ' + esc(d.serial) + '">' +
+        '<span class="wm-sn">' + esc(d.serial) + '</span><button type="button" data-saved="' + esc(d.serial) + '" title="List the networks saved on this phone"' + (S.busy[d.serial] ? ' disabled' : '') + '>Saved on phone</button>' +
+        '<span class="wm-st ' + cls + '">' + esc(st) + '</span></div>';
+    }).join('');
+    updateButtons();
+  }
+  q('wm-devs').addEventListener('change', function (e) {
+    var c = e.target.closest('[data-sn]'); if (!c) return;
+    S.checked[c.dataset.sn] = c.checked; renderDevs();
+  });
+  q('wm-devs').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-saved]'); if (!b) return;
+    var sn = b.dataset.saved;
+    say('Reading networks saved on ' + sn + '…', 's');
+    api('GET', '/device-networks?serial=' + encodeURIComponent(sn)).then(function (d) {
+      var s = d.saved || [];
+      if (!s.length) { say(sn + ': no saved networks reported.', 'm'); return; }
+      say(sn + ' has ' + s.length + ' saved network(s):', 'k');
+      s.forEach(function (n) { say('   • ' + (typeof n === 'string' ? n : (n.ssid || JSON.stringify(n))), 'm'); });
+    }).catch(function (er) { say('✗ ' + sn + ': ' + er.message, 'e'); });
+  });
+  q('wm-all').onclick = function () { S.devs.forEach(function (d) { if (!S.busy[d.serial]) S.checked[d.serial] = true; }); renderDevs(); };
+  q('wm-none').onclick = function () { S.checked = {}; renderDevs(); };
+  function loadDevices() {
+    return api('GET', '/devices').then(function (d) {
+      S.devs = d.devices || [];
+      var live = {}; S.devs.forEach(function (x) { live[x.serial] = 1; });
+      for (var k in S.checked) if (!live[k]) delete S.checked[k];
+      renderDevs();
+    }).catch(function (er) { q('wm-devs').innerHTML = '<div class="wm-empty">Could not load devices: ' + esc(er.message) + '</div>'; });
+  }
+  q('wm-rf').onclick = function () { S.notes = {}; loadDevices(); };
+
+  /* ---------- actions ---------- */
+  function checkedSerials() { return S.devs.map(function (d) { return d.serial; }).filter(function (s) { return S.checked[s] && !S.busy[s]; }); }
+  function updateButtons() {
+    var n = checkedSerials().length, net = S.sel !== null ? netById(S.sel) : null;
+    q('wm-go').disabled = !(n && net);
+    q('wm-off').disabled = !n;
+    q('wm-go').textContent = net ? '▶ Connect to “' + net.label + '”' : '▶ Connect';
+    q('wm-hint').textContent = !net ? 'Pick a saved network on the left.' : (!n ? 'Tick the phones to use.' : n + ' phone(s) selected.');
+  }
+  function runOne(serial, path, body, label, done) {
+    S.busy[serial] = label; delete S.notes[serial]; renderDevs();
+    return api('POST', path, body).then(function (r) { done(serial, r); })
+      .catch(function (er) { S.notes[serial] = { ok: false, text: '✗ ' + er.message }; say('✗ ' + serial + ': ' + er.message, 'e'); })
+      .then(function () { delete S.busy[serial]; renderDevs(); });
+  }
+  q('wm-go').onclick = function () {
+    var net = netById(S.sel), list = checkedSerials(); if (!net || !list.length) return;
+    say('Connecting ' + list.length + ' phone(s) to “' + net.label + '” (' + net.ssid + ')…', 's');
+    Promise.all(list.map(function (sn) {
+      return runOne(sn, '/connect', { serial: sn, network_id: net.id }, 'Connecting to ' + net.ssid + '…', function (s, r) {
+        if (r.success) {
+          var msg = '✓ Connected to ' + (r.ssid || net.ssid) + (r.ip_address ? ' · IP ' + r.ip_address : '');
+          S.notes[s] = { ok: true, text: msg }; say(s + ': ' + msg.slice(2), 'k');
+        } else {
+          S.notes[s] = { ok: false, text: '✗ ' + (r.error || 'Failed') }; say('✗ ' + s + ': ' + (r.error || 'Failed'), 'e');
+        }
+      });
+    })).then(function () { say('Done.', 'm'); loadDevices(); });
+  };
+  q('wm-off').onclick = function () {
+    var list = checkedSerials(); if (!list.length) return;
+    say('Turning Wi-Fi off on ' + list.length + ' phone(s)…', 's');
+    Promise.all(list.map(function (sn) {
+      return runOne(sn, '/disconnect', { serial: sn }, 'Turning Wi-Fi off…', function (s, r) {
+        if (r.success) { S.notes[s] = { ok: true, text: '✓ Wi-Fi turned off' }; say(s + ': Wi-Fi turned off.', 'k'); }
+        else { S.notes[s] = { ok: false, text: '✗ ' + (r.error || 'Failed') }; say('✗ ' + s + ': ' + (r.error || 'Failed'), 'e'); }
+      });
+    })).then(function () { say('Done.', 'm'); loadDevices(); });
+  };
+
+  /* ---------- nav tab (right after Device Setup) ---------- */
+  var btn = document.createElement('button');
+  btn.dataset.v = 'wifi';
+  btn.innerHTML = '<b><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8.8a15 15 0 0 1 20 0"/><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16.2a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1" fill="currentColor"/></svg></b>Wi-Fi';
+  function place() {
+    var dev = nav.querySelector('[data-v="dev"]'), set = nav.querySelector('[data-v="set"]');
+    if (dev) nav.insertBefore(btn, dev.nextSibling); else nav.insertBefore(btn, set || null);
+  }
+  place();
+  window.addEventListener('load', place);                    // Device Setup's tab may be added after ours: keep Wi-Fi right after it
+
+  function open() {
+    loadStatus(); loadDevices();
+    clearInterval(S.timer);
+    S.timer = setInterval(function () { if (!anyBusy() && fm.hidden && qm.hidden) loadDevices(); }, 6000);
+  }
+  function close() { clearInterval(S.timer); S.timer = null; }
+  nav.addEventListener('click', function (e) {                // the console's own handler has already switched the other pages
+    var b = e.target.closest('[data-v]'); if (!b) return;
+    var on = b.dataset.v === 'wifi';
+    v.classList.toggle('on', on);
+    if (on) open(); else close();
+  });
+})();
+</script>
