@@ -1,0 +1,12 @@
+[
+  {
+    "id": 2,
+    "label": "MMID",
+    "ssid": "MMID",
+    "security_type": "WPA",
+    "username_enc": null,
+    "password_enc": "gAAAAABqqNs3brRl-tbpkaqNH7YP5miTkGBFPbYCxYyFICqPw5u5HRK6eB8HBa5ncc2EIZrYSYmGiXWIU9NOZC2OXDvzQCvQCA==",
+    "source": "qr",
+    "hidden": true
+  }
+]
