@@ -1,0 +1,437 @@
+<!doctype html><html lang="en" data-theme="classic"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tracfone Console</title>
+<style>
+/* ===== THEMES: Ocean Blue (id classic) · Dark · Lagoon Light (id light) · Royal Gold. Theme ids are unchanged so saved settings + backend keep working ===== */
+:root,[data-theme=classic]{--bg:radial-gradient(60% 46% at 88% -6%,rgba(125,228,255,.55),transparent 70%),radial-gradient(52% 42% at 4% 8%,rgba(30,160,210,.5),transparent 72%),linear-gradient(162deg,#05344b 0%,#0a5b7e 46%,#1590b6 100%);--pn:rgba(226,244,252,.78);--pnb:linear-gradient(150deg,rgba(255,255,255,.62),rgba(255,255,255,.1) 42%,rgba(255,255,255,.3)),rgba(200,234,247,.6);--bd:rgba(14,86,128,.26);--t:#0a2638;--m:#2d5166;--ac:#0a8fd0;--b1:#4a67f2;--b2:#2338b8;--bt:#fff;--inp:rgba(244,251,255,.93);--log:rgba(247,252,255,.92);--ok:#0b8f5f;--err:#cf2f48;--warn:#a86500;--sh:inset 0 1px 0 rgba(255,255,255,.75),0 14px 38px rgba(2,36,60,.38);--ch:rgba(10,143,208,.16);--glow:0 0 30px rgba(90,210,255,.14);--gl:rgba(110,225,255,.34);--bo2:1;--ca:#0fa6b8;--ca2:#087384;--sol:#eaf7fc;--w1:#1498dc;--w2:#0a62a6;--d1:#12b886;--d2:#0a7a58;--x1:#7a63f0;--x2:#4a37c4;--s1:#ff8156;--s2:#d4482a;--ht:#f2fbff;--hm:#bfe6f4;--hac:#7fe3ff;--hb:rgba(255,255,255,.13);--hbd:rgba(255,255,255,.42);--hch:rgba(255,255,255,.24)}
+[data-theme=dark]{--bg:radial-gradient(55% 40% at 80% -2%,rgba(255,214,130,.34),transparent 70%),radial-gradient(45% 35% at 8% 6%,rgba(214,160,70,.22),transparent 70%),repeating-linear-gradient(115deg,rgba(255,255,255,.028) 0 2px,transparent 2px 46px),linear-gradient(#15110a,#050403);--pn:rgba(36,28,15,.8);--pnb:linear-gradient(150deg,rgba(255,226,150,.13),rgba(255,255,255,.02) 38%,rgba(0,0,0,.3)),rgba(30,23,12,.78);--bd:rgba(244,194,100,.55);--t:#fcf4e3;--m:#c4b28a;--ac:#f4c660;--b1:#4b92ff;--b2:#1c52d6;--bt:#fff;--inp:rgba(12,9,5,.72);--log:rgba(8,6,3,.8);--ok:#4fe6a4;--err:#ff6b7a;--warn:#ffd266;--sh:inset 0 1px 0 rgba(255,235,175,.3),0 14px 40px rgba(0,0,0,.62);--ch:rgba(244,198,96,.17);--glow:0 0 32px rgba(244,190,90,.16);--gl:rgba(255,200,100,.2);--ca:#f4c660;--ca2:#c8962e;--sol:#1e1810;--w1:#4b92ff;--w2:#1c52d6;--d1:#9b6cff;--d2:#5b32d0;--x1:#1fd1b8;--x2:#0b8a7c;--s1:#ff8a4c;--s2:#d6431c;--ht:initial;--hm:initial;--hac:initial;--hb:initial;--hbd:initial;--hch:initial;--bo2:0}
+[data-theme=light]{--bg:radial-gradient(56% 42% at 92% -6%,rgba(105,214,240,.6),transparent 70%),radial-gradient(46% 36% at 0% 8%,rgba(150,232,222,.55),transparent 72%),linear-gradient(162deg,#f2fbff 0%,#daf2fb 52%,#c2e7f5 100%);--pn:rgba(255,255,255,.8);--pnb:linear-gradient(150deg,rgba(255,255,255,.96),rgba(255,255,255,.45)),rgba(255,255,255,.55);--bd:rgba(24,112,162,.22);--t:#0b2a3d;--m:#3d6277;--ac:#0a86c4;--b1:#4a6cf2;--b2:#2543b8;--bt:#fff;--inp:#fff;--log:#fbfeff;--ok:#0d8f5f;--err:#d03a4a;--warn:#a86500;--sh:inset 0 1px 0 #fff,0 10px 30px rgba(20,90,140,.16);--ch:rgba(19,159,220,.12);--glow:none;--gl:rgba(90,200,240,.3);--bo2:1;--ca:#12a8a2;--ca2:#0a756f;--sol:#ffffff;--w1:#139fdc;--w2:#0a6aae;--d1:#14b58a;--d2:#0a7a58;--x1:#7d66f2;--x2:#4b38c6;--s1:#ff8a5c;--s2:#d4482a;--ht:initial;--hm:initial;--hac:initial;--hb:initial;--hbd:initial;--hch:initial;--bo2:1;--shl:#075a8f}
+[data-theme=royal]{--bg:radial-gradient(ellipse at 50% 20%,rgba(255,247,210,.7),transparent 60%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72'%3E%3Cg fill='none' stroke='%238a6414' stroke-opacity='.28'%3E%3Cpath d='M36 0L72 36L36 72L0 36Z'/%3E%3Cpath d='M36 10L62 36L36 62L10 36Z'/%3E%3Ccircle cx='36' cy='36' r='6'/%3E%3C/g%3E%3C/svg%3E"),linear-gradient(#f0da92,#e6c870);--pn:rgba(255,248,222,.88);--bd:rgba(150,110,30,.34);--t:#3b2508;--m:#7a5f2a;--ac:#b8860b;--b1:#2f6285;--b2:#1f4668;--bt:#fff;--inp:rgba(255,252,238,.95);--log:rgba(255,251,236,.92);--ok:#1b6b3a;--err:#a3202f;--warn:#8a5a00;--sh:0 8px 28px rgba(110,80,10,.2);--ch:rgba(184,134,11,.15);--glow:none;--gl:rgba(255,255,255,.4);--ca:#8f2a3a;--ca2:#6a1c29;--sol:#fbf1cf;--w1:#2f6285;--w2:#1f4668;--d1:#2d9470;--d2:#1b6049;--x1:#85569f;--x2:#573677;--s1:#c4483a;--s2:#80241a;--ht:initial;--hm:initial;--hac:initial;--hb:initial;--hbd:initial;--hch:initial;--bo2:0;--pnb:initial}
+*{box-sizing:border-box}
+body{margin:0;height:100vh;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);background-attachment:fixed;color:var(--t);font:13px/1.4 "Segoe UI Variable","Segoe UI",system-ui,sans-serif}
+.box{background:var(--pnb,var(--pn));border:1px solid var(--bd);border-radius:16px;box-shadow:var(--sh),var(--glow);backdrop-filter:blur(14px)}
+body:before{content:"";position:fixed;inset:-20%;z-index:-1;pointer-events:none;background:radial-gradient(38% 30% at 70% 22%,var(--gl),transparent 70%);animation:dr 16s ease-in-out infinite alternate}@keyframes dr{to{transform:translate(-12%,10%) scale(1.15)}}
+header{position:relative;z-index:50;display:flex;align-items:center;gap:12px;padding:12px 22px 8px}
+.logo{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--ac),var(--b2));color:#fff;display:grid;place-items:center;font-weight:800;font-size:18px;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+h1{margin:0;font-size:20px;letter-spacing:.3px}h1 span{color:var(--ac)}.sub{color:var(--m);font-size:11.5px}
+nav{margin-left:auto;margin-right:0;display:flex;padding:4px;gap:2px}nav button{background:none;border:0;color:var(--m);padding:6px 16px;border-radius:12px;font-size:11px;display:grid;justify-items:center;gap:1px}
+nav button b{font-size:17px;font-weight:400;line-height:1}nav button.on{background:var(--ch);color:var(--t)}
+.tsw{display:flex;align-items:center;gap:8px;padding:6px 12px;font-size:11px;color:var(--m);font-weight:600}.tsw i{width:20px;height:20px;border-radius:50%;border:2px solid var(--bd);cursor:pointer;transition:transform .15s}.tsw i:hover{transform:scale(1.2)}.tsw i.on{outline:2px solid var(--ac);outline-offset:2px}
+.prof{position:relative;padding:5px 12px 5px 6px;display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600}
+.av{width:30px;height:30px;border-radius:50%;background:var(--b1);color:#fff;display:grid;place-items:center;font-weight:700}
+.dot{position:absolute;top:6px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--ok)}.dot.off{background:var(--m)}.dot.bad{background:var(--err)}
+#pm{display:none;position:absolute;right:0;top:50px;width:220px;padding:8px;z-index:60;background:var(--sol)}#pm.on{display:block}
+#pm div{padding:6px 8px;border-radius:8px;cursor:pointer}#pm div:hover,#pm .cur{background:var(--ch)}#pm .add{color:var(--ac)}
+label{display:block;font-size:10px;letter-spacing:.8px;color:var(--m);font-weight:700;margin-bottom:3px}
+input,select{width:100%;padding:8px 10px;border-radius:10px;border:1px solid var(--bd);background:var(--inp);color:var(--t);font:inherit;outline:none}
+input:focus,select:focus,button:focus-visible{box-shadow:0 0 0 3px var(--ch);border-color:var(--ac)}
+.bar{display:grid;grid-template-columns:1.1fr 1fr 1.7fr auto;gap:14px;margin:0 22px 12px;padding:10px 14px;align-items:end}
+.row{display:flex;gap:6px}.row button{flex:none}
+.sw{display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--m);white-space:nowrap;margin:0 0 6px;font-size:12px;letter-spacing:0;font-weight:600}
+.sw input{width:36px;height:20px;appearance:none;border-radius:99px;background:var(--bd);position:relative;padding:0;border:0;cursor:pointer}
+.sw input:after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.2s}
+.sw input:checked{background:var(--b1)}.sw input:checked:after{left:18px}
+button{font:inherit;cursor:pointer;border:1px solid var(--bd);border-radius:10px;padding:6px 12px;font-weight:600;background:var(--inp);color:var(--t);transition:.15s}
+button:hover:not(:disabled){border-color:var(--ac)}button:disabled{opacity:.45;cursor:not-allowed}
+.go{position:relative;overflow:hidden;height:34px;padding:0 16px;color:var(--bt);background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,0) 52%),linear-gradient(var(--b1),var(--b2));border-color:transparent;flex:1;box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 5px 14px color-mix(in srgb,var(--b2) 55%,transparent);text-shadow:0 1px 2px rgba(0,0,0,.35)}.go:after{content:"";position:absolute;top:0;left:-70%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-20deg);transition:left .7s}.go:hover:not(:disabled):after{left:140%}
+.go:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px)}
+.view{flex:1;min-height:0;display:none;padding:0 22px 12px}.view.on{display:grid}
+#v-dash{grid-template-columns:minmax(330px,.8fr) minmax(0,1.5fr);gap:14px}
+.panel{padding:14px;display:flex;flex-direction:column;gap:10px;min-height:0}
+.ph{display:flex;align-items:center;gap:10px}.ph h2{margin:0;font-size:16px;letter-spacing:.5px}.ph .in{margin-left:auto;width:170px}
+.fl{display:flex;gap:6px;align-items:center}.fl button{padding:5px 12px;border-radius:99px;font-size:12px}.fl .so.on{border-color:var(--ac);background:var(--ch)}.fl button.on{background:var(--ch);border-color:var(--ac);color:var(--t)}.fl .so{margin-left:auto}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;overflow:auto;align-content:start;padding:2px}
+.grid{perspective:900px}.card{position:relative;padding:11px 12px;transform-style:preserve-3d;transition:transform .18s ease-out,box-shadow .2s,border-color .2s;will-change:transform}.card:hover{border-color:var(--g1,var(--ac));box-shadow:var(--sh),0 0 26px color-mix(in srgb,var(--g1,var(--ac)) 35%,transparent)}.card:before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:4px;border-radius:0 4px 4px 0;background:linear-gradient(var(--g1,var(--ac)),var(--g2,var(--ac)))}.card:after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .2s;background:radial-gradient(200px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.16),transparent 60%)}.card:hover:after{opacity:1}.card .ic{position:absolute;right:12px;top:46px;width:38px;height:38px;opacity:.5;color:var(--g1,var(--ac))}.card{--g1:var(--ca);--g2:var(--ca2)}.card .tag{color:var(--g1);background:var(--ch);border-color:var(--g1)}.card .code{color:var(--t)}.card .doc{border-color:var(--g1);color:var(--g1)}.card .ic{opacity:.7}.card .chip{border-color:color-mix(in srgb,var(--g1) 55%,transparent)}.card:last-child:nth-child(odd){grid-column:1/-1;justify-self:center;width:calc(50% - 5px)}.card .hd{display:flex;align-items:center;justify-content:space-between}
+.code{font-size:22px;font-weight:800}.tag{font-size:9px;letter-spacing:.7px;font-weight:700;padding:3px 8px;border-radius:99px;background:var(--ch);color:var(--ac);border:1px solid var(--bd)}
+.card h3{margin:0 0 5px;font-size:12.5px}.chip{display:inline-block;font-size:10.5px;padding:1px 8px;border-radius:99px;border:1px solid var(--bd);color:var(--m)}
+.sets{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 0;font-size:10px;color:var(--m);align-items:center}.sets b{min-width:20px;text-align:center;padding:1px 5px;border-radius:6px;color:#fff;background:#6a4bd0}
+.act{display:flex;gap:8px;margin-top:9px}.act .doc{width:34px;padding:0}
+.no{color:var(--m);padding:20px;text-align:center}
+.top{display:flex;gap:16px;align-items:center}.ring{position:relative;width:84px;height:84px;flex:none}.ring svg{transform:rotate(-90deg)}
+.ring .n{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-size:22px;font-weight:800;line-height:1}.ring small{display:block;font-size:10px;color:var(--m);font-weight:600;margin-top:3px}
+#stage{flex:1;color:var(--m)}#stage b{display:block;color:var(--t);font-size:17px}
+.stp{display:grid;grid-template-columns:repeat(6,1fr);position:relative;margin:2px 6px}.stp:before{content:"";position:absolute;left:8%;right:8%;top:8px;height:2px;background:var(--bd)}
+.stp div{text-align:center;font-size:11px;color:var(--m);position:relative}.stp i{display:block;width:16px;height:16px;border-radius:50%;margin:0 auto 6px;background:var(--pn);border:2px solid var(--bd)}
+.stp .done i{background:var(--ok);border-color:var(--ok)}.stp .active i{border-color:var(--ac);background:var(--ac);box-shadow:0 0 0 4px var(--ch)}.stp .failed i{background:var(--err);border-color:var(--err)}
+.stp .done,.stp .active{color:var(--t)}
+#alert{display:none;padding:9px 12px;border-radius:12px;background:var(--ch);border:1px solid var(--warn);font-weight:700;animation:pu 1s infinite}@keyframes pu{50%{opacity:.4}}
+.mid{flex:1;min-height:0;display:flex;gap:12px}
+.phone{flex:none;width:190px;display:flex;flex-direction:column;gap:6px}.phone label{margin:0}
+.fr{flex:1;min-height:0;aspect-ratio:9/19;max-width:100%;margin:0 auto;border-radius:26px;border:5px solid color-mix(in srgb,var(--ac) 80%,#fff 8%);animation:fl 5s ease-in-out infinite;background:var(--inp);position:relative;overflow:hidden;box-shadow:var(--sh),var(--glow)}
+.fr:before{content:"";position:absolute;top:6px;left:50%;width:34%;height:9px;transform:translateX(-50%);border-radius:9px;background:color-mix(in srgb,var(--ac) 70%,#000);z-index:2}@keyframes fl{50%{transform:translateY(-5px)}}.ped{height:16px;margin:-6px 8px 0;border-radius:50%;background:radial-gradient(ellipse at 50% 40%,var(--ac),color-mix(in srgb,var(--ac) 40%,transparent) 55%,transparent 72%);box-shadow:0 0 26px color-mix(in srgb,var(--ac) 55%,transparent);flex:none}.fr img{width:100%;height:100%;object-fit:cover;display:none}.fr span{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:12px;color:var(--m);font-size:11.5px}
+.tabs{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}.tb{display:flex;gap:6px}.tb button{border-radius:10px 10px 0 0;padding:7px 14px}.tb button.on{background:var(--b2);color:var(--bt);border-color:var(--b2)}
+.tp{flex:1;min-height:0;overflow:auto;border-radius:12px;background:var(--log);border:1px solid var(--bd);padding:12px;display:none}.tp.on{display:block}
+#log{font:12.5px/1.6 Consolas,"Cascadia Mono",monospace;white-space:pre-wrap;word-break:break-word}
+#log .k{color:var(--ok)}#log .e{color:var(--err)}#log .w{color:var(--warn)}#log .s{color:var(--ac)}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:6px 10px}.kv span:nth-child(odd){color:var(--m)}
+.sl{display:flex;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--bd)}.sl i{width:10px;height:10px;border-radius:50%;background:var(--bd)}.sl.done i{background:var(--ok)}.sl.active i{background:var(--ac)}.sl.failed i{background:var(--err)}.sl em{margin-left:auto;color:var(--m);font-style:normal}
+.eg{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}.eg img{width:100%;border-radius:8px;border:1px solid var(--bd);cursor:pointer}
+.ef{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--bd)}.ef em{margin-left:auto;color:var(--m);font-style:normal}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--bd)}th{color:var(--m);font-size:11px}
+.st{font-weight:700}.st.complete{color:var(--ok)}.st.failed{color:var(--err)}.st.stopped{color:var(--warn)}
+#v-hist,#v-set{overflow:auto}#v-hist .panel,#v-set .panel{width:100%;max-width:1000px;margin:0 auto}
+.themes{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.tc{color:var(--t);padding:10px;cursor:pointer;display:flex;flex-direction:column;gap:8px}.tc.on{border-color:var(--ac);box-shadow:0 0 0 2px var(--ch)}
+.tc .sw2{height:70px;border-radius:10px;border:1px solid var(--bd);position:relative;overflow:hidden}.tc .sw2:after{content:"";position:absolute;left:10px;right:10px;bottom:10px;height:14px;border-radius:6px;background:linear-gradient(var(--b1),var(--b2))}
+.tc b{font-size:14px}.tc small{color:var(--m)}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.status{display:grid;grid-template-columns:auto auto 1fr auto;gap:26px;align-items:center;margin:0 22px 10px;padding:8px 18px}
+.status div{display:flex;gap:10px;align-items:center;min-width:0}.status small{display:block;color:var(--m);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:420px}
+.ck{width:22px;height:22px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:12px;flex:none}.ck.bad{background:var(--err)}.ck.off{background:var(--m)}
+#toast{position:fixed;right:22px;bottom:70px;padding:12px 16px;border-radius:12px;background:var(--pn);border:1px solid var(--ok);box-shadow:var(--sh);opacity:0;transform:translateY(20px);transition:.3s;z-index:30;pointer-events:none}#toast.on{opacity:1;transform:none}
+@media(max-width:1000px){body{height:auto;overflow:auto}#v-dash{grid-template-columns:1fr}.bar,.two,.themes{grid-template-columns:1fr 1fr}.mid{flex-direction:column;min-height:560px}.phone{width:100%;height:300px}}
+/* animations are controlled by Settings > Enable animations (html.noanim) */
+</style>
+<style id="tf-v3">
+/* ===== v3 · header theming (fixed themes keep their old look: these vars are only set by Ocean / Lagoon) ===== */
+header{color:var(--ht,var(--t))}
+header .sub{color:var(--hm,var(--m))}
+header h1 span{color:var(--hac,var(--ac))}
+header .box{background:var(--hb,var(--pnb,var(--pn)));border-color:var(--hbd,var(--bd))}
+header nav button{color:var(--hm,var(--m));transition:transform .25s cubic-bezier(.175,.885,.32,1.8),background .2s,color .2s}
+header nav button:hover{transform:translateY(-2px)}
+header nav button.on{background:var(--hch,var(--ch));color:var(--ht,var(--t))}
+header .tsw{color:var(--hm,var(--m))}
+header .prof{color:var(--ht,var(--t))}
+#pm{color:var(--t);background:var(--sol);border-color:var(--bd)}
+.tsw i{transition:transform .25s cubic-bezier(.175,.885,.32,2.2)}
+/* ===== liquid-glass shimmer title + second drifting light blob (Ocean / Lagoon only) ===== */
+html:is([data-theme=classic],[data-theme=light]) header h1 span{background:linear-gradient(100deg,var(--hac,var(--ac)) 20%,var(--shl,#fff) 46%,var(--hac,var(--ac)) 72%);background-size:230% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shim 6s linear infinite}
+@keyframes shim{to{background-position:-230% 0}}
+body:after{content:"";position:fixed;inset:-25%;z-index:-1;pointer-events:none;opacity:var(--bo2,0);background:radial-gradient(34% 28% at 22% 78%,var(--gl),transparent 70%),radial-gradient(26% 22% at 64% 56%,rgba(60,205,190,.24),transparent 70%);animation:dr2 22s ease-in-out infinite alternate}
+@keyframes dr2{to{transform:translate(14%,-9%) scale(1.2) rotate(8deg)}}
+/* real refraction on the top bar + status bar (Chromium); other browsers keep the normal frosted blur */
+html.lq-ok:is([data-theme=classic],[data-theme=light]) :is(header nav.box,header .tsw,header .hlp,.status){-webkit-backdrop-filter:blur(6px) saturate(1.6) url(#tf-liquid);backdrop-filter:blur(6px) saturate(1.6) url(#tf-liquid)}
+/* ===== motion ===== */
+/* theme switch: no per-element transitions (they flickered on the busy dashboard); pause looping effects, then a short whole-page fade */
+.tt *,.tt *:before,.tt *:after{transition:none!important;animation-play-state:paused!important}
+html.tt body{animation:tfade .35s ease}@keyframes tfade{from{opacity:.4}}
+.view.on{animation:vin .5s cubic-bezier(.2,.85,.25,1)}@keyframes vin{from{opacity:0;transform:translateY(10px)}}
+.ent .card{animation:cin .6s cubic-bezier(.2,.9,.3,1.2) backwards;animation-delay:calc(var(--i,0)*70ms)}
+@keyframes cin{from{opacity:0;transform:translateY(22px) scale(.96)}}
+.card{transition:transform .38s cubic-bezier(.175,.885,.32,1.5),box-shadow .2s,border-color .2s}.card:hover{transition:transform .12s ease-out,box-shadow .2s,border-color .2s}
+.go{transition:transform .25s cubic-bezier(.175,.885,.32,1.6),filter .2s,box-shadow .2s}.go:active:not(:disabled){transform:scale(.96)}
+body.running .ring{filter:drop-shadow(0 0 7px var(--ac))}
+body.running #arc{animation:arcp 1.8s ease-in-out infinite}@keyframes arcp{50%{opacity:.6}}
+body.running .fr{box-shadow:var(--sh),0 0 36px color-mix(in srgb,var(--ac) 55%,transparent)}
+body.running #stage b:after{content:"";display:inline-block;width:8px;height:8px;margin-left:8px;border-radius:50%;background:var(--ok);animation:pu 1s infinite}
+/* ===== colour-coded scenario cards (Wi-Fi / Data / Combined / Spanish) ===== */
+.kcard[data-ty=wifi]{--g1:var(--w1);--g2:var(--w2)}
+.kcard[data-ty=data]{--g1:var(--d1);--g2:var(--d2)}
+.kcard[data-ty=combined]{--g1:var(--x1);--g2:var(--x2)}
+.kcard[data-ty=es]{--g1:var(--s1);--g2:var(--s2)}
+.card .tag{color:color-mix(in srgb,var(--g1) 68%,var(--t))}
+.calls{display:flex;gap:7px;align-items:center;width:100%;margin:7px 0 0;padding:5px 9px;border-radius:10px;border:1px dashed var(--g1);background:color-mix(in srgb,var(--g1) 10%,transparent);color:var(--t);font-size:10.5px;font-weight:600;text-align:left}
+.calls:hover:not(:disabled){background:color-mix(in srgb,var(--g1) 20%,transparent)}.calls svg{flex:none;color:var(--g1)}
+.card{display:flex;flex-direction:column}.card .chip{align-self:flex-start}.card .act{margin-top:auto;padding-top:9px}
+/* ===== help button ===== */
+.hlp{width:38px;height:38px;border-radius:50%;padding:0;font-size:17px;font-weight:800;display:grid;place-items:center;color:var(--ht,var(--t));position:relative}
+.hlp.nudge:before{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--ac);animation:ripple 2s infinite;pointer-events:none}
+@keyframes ripple{from{transform:scale(.9);opacity:.9}to{transform:scale(1.55);opacity:0}}
+#alert{display:none!important}
+/* ===== call coach (live banner) ===== */
+.coach{--cc:var(--ac);display:none;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;border:1.5px solid var(--cc);background:color-mix(in srgb,var(--cc) 14%,var(--inp))}
+.coach.on{display:flex;animation:cin .45s cubic-bezier(.2,.9,.3,1.3)}
+.coach.back{--cc:var(--warn)}.coach.ok{--cc:var(--ok)}.coach.bad{--cc:var(--err)}
+.coach .ci{position:relative;flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--cc);color:#fff}
+.coach.ans .ci:before,.coach.back .ci:before{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--cc);animation:ripple 1.4s infinite}
+.coach.ans .ci svg,.coach.back .ci svg{animation:rng .9s ease-in-out infinite}
+@keyframes rng{0%,100%{transform:rotate(0)}20%{transform:rotate(-16deg)}40%{transform:rotate(14deg)}60%{transform:rotate(-10deg)}80%{transform:rotate(6deg)}}
+.coach .cb{flex:1;min-width:0}.coach .cb b{display:block;font-size:14px}.coach .cb span{display:block;color:var(--m);font-size:12px}
+.coach .cb span b{display:inline;font-size:inherit}
+.coach .cs{display:flex;gap:5px;flex:none}.coach .cs i{font-style:normal;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;border:1px solid var(--bd);color:var(--m);white-space:nowrap}
+.coach .cs i.d{background:var(--ok);border-color:var(--ok);color:#fff}.coach .cs i.a{background:var(--cc);border-color:var(--cc);color:#fff}
+.coach .ct{flex:none;min-width:62px;text-align:right;font:700 20px Consolas,"Cascadia Mono",monospace;color:var(--cc)}
+/* ===== overlays: welcome kit + call reminder ===== */
+.ov{position:fixed;inset:0;z-index:80;display:none;place-items:center;padding:16px;background:rgba(2,24,40,.58);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px)}
+.ov.on{display:grid;animation:fin .3s ease}@keyframes fin{from{opacity:0}}
+#toast{z-index:95}
+.kit{width:min(900px,100%);max-height:94vh;display:flex;flex-direction:column;overflow:hidden;border-radius:22px;background:var(--sol);color:var(--t);border:1px solid var(--bd);box-shadow:0 30px 80px rgba(0,0,0,.45);animation:kin .5s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes kin{from{opacity:0;transform:translateY(24px) scale(.96)}}
+.kit.sm{width:min(640px,100%)}
+.kh{display:flex;align-items:center;gap:12px;padding:15px 22px;border-bottom:1px solid var(--bd);background:linear-gradient(120deg,color-mix(in srgb,var(--ac) 16%,transparent),transparent)}
+.kh h2{margin:0;font-size:18px}.kh .kc{margin-left:auto;color:var(--m);font-size:12px;font-weight:600;white-space:nowrap}
+.kx{width:32px;height:32px;padding:0;border-radius:50%;flex:none}
+.kbody{flex:1;min-height:0;overflow:auto;padding:22px 26px}
+.ksl{display:none}.ksl.on{display:block;animation:ks .45s cubic-bezier(.2,.85,.25,1)}@keyframes ks{from{opacity:0;transform:translateX(26px)}}
+.ksl h3{margin:0 0 4px;font-size:22px}.ksl>p,.kbody>p{margin:0 0 14px;color:var(--m);font-size:13px}
+.ksl h5{margin:16px 0 8px;font-size:11px;letter-spacing:.9px;color:var(--m)}
+.kf{display:flex;align-items:center;gap:10px;padding:13px 22px;border-top:1px solid var(--bd)}
+.kdots{display:flex;gap:7px;margin:0 auto}.kdots i{width:8px;height:8px;border-radius:99px;background:var(--bd);cursor:pointer;transition:all .35s cubic-bezier(.175,.885,.32,1.5)}.kdots i.on{width:26px;background:var(--ac)}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px}
+.kcard{padding:11px 14px;border-radius:14px;border:1px solid var(--bd);background:var(--inp)}
+.kcard b{display:block;margin-bottom:2px;font-size:13.5px}.kcard span{display:block;color:var(--m);font-size:12px;line-height:1.4}
+.kcard.sc{border-left:4px solid var(--g1,var(--ac))}.kcard.sc b em{font-style:normal;color:var(--g1);font-size:10px;letter-spacing:.6px;margin-left:6px}
+.kcard .ico{font-size:20px;line-height:1;display:block;margin-bottom:4px}
+.kth{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.kth button{display:flex;flex-direction:column;gap:6px;align-items:stretch;padding:8px;border-radius:14px;text-align:left;border:2px solid var(--bd)}
+.kth button.on{border-color:var(--ac);box-shadow:0 0 0 3px var(--ch)}
+.kth button i{height:44px;border-radius:9px;border:1px solid var(--bd)}.kth button b{font-size:13px}.kth button small{color:var(--m);font-size:11px;font-weight:400}
+.krow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.tl{display:grid;gap:10px}
+.tls{display:grid;grid-template-columns:44px 1fr;gap:12px;padding:12px 14px;border-radius:14px;border:1px solid var(--bd);background:var(--inp)}
+.tln{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:17px;background:linear-gradient(var(--c1),var(--c2));box-shadow:0 4px 12px color-mix(in srgb,var(--c2) 45%,transparent)}
+.tls.a{--c1:var(--w1);--c2:var(--w2)}.tls.b{--c1:var(--s1);--c2:var(--s2)}
+.tls h4{margin:0;font-size:14.5px}.tls .wh{color:var(--m);font-size:11.5px;margin-bottom:5px}
+.tls dl{margin:0;display:grid;grid-template-columns:78px 1fr;gap:3px 10px;font-size:12.5px}.tls dt{font-weight:700;color:var(--m)}.tls dd{margin:0}
+.lim{display:inline-block;margin-left:8px;padding:1px 9px;border-radius:99px;font-size:10.5px;font-weight:700;border:1px solid var(--c2);color:var(--c2);vertical-align:2px}
+.kwarn{margin:12px 0 0;padding:9px 12px;border-radius:12px;border:1px solid var(--warn);color:var(--t);background:color-mix(in srgb,var(--warn) 10%,transparent);font-size:12.5px}
+.kbtn{height:36px;padding:0 22px}
+@media(max-width:700px){.krow{grid-template-columns:1fr}.tls dl{grid-template-columns:1fr}.coach{flex-wrap:wrap}}
+/* ===== more visible motion (v3.1) ===== */
+@keyframes dr{to{transform:translate(-18%,12%) scale(1.25)}}
+header>*{animation:hin .7s cubic-bezier(.2,.9,.3,1.25) backwards}header>*:nth-child(2){animation-delay:.07s}header>nav{animation-delay:.14s}header>.tsw{animation-delay:.21s}header>.hlp{animation-delay:.28s}header>.prof{animation-delay:.35s}
+@keyframes hin{from{opacity:0;transform:translateY(-16px)}}
+.bar{animation:cin .7s cubic-bezier(.2,.9,.3,1.2) .2s backwards}
+#main>.panel:nth-child(1){animation:sin .75s cubic-bezier(.2,.9,.3,1.15) .3s backwards}#main>.panel:nth-child(2){animation:sin .75s cubic-bezier(.2,.9,.3,1.15) .45s backwards}
+@keyframes sin{from{opacity:0;transform:translateY(34px) scale(.97)}}
+.status{animation:cin .7s cubic-bezier(.2,.9,.3,1.2) .55s backwards}
+.logo{animation:lgp 3.6s ease-in-out infinite}@keyframes lgp{50%{box-shadow:0 0 0 7px var(--ch),0 4px 16px rgba(0,0,0,.2)}}
+.card .go:not(:disabled):after{animation:swp 5s ease-in-out infinite;animation-delay:calc(var(--i,0)*.6s)}
+@keyframes swp{0%,62%{left:-70%}100%{left:140%}}
+.card .go:not(:disabled){animation:gl 3.2s ease-in-out infinite;animation-delay:calc(var(--i,0)*.4s)}
+@keyframes gl{50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 8px 22px color-mix(in srgb,var(--b2) 75%,transparent)}}
+.card .ic{animation:icf 4s ease-in-out infinite}@keyframes icf{50%{transform:translateY(-4px) scale(1.06)}}
+.stp .active i{animation:pu 1.2s infinite}
+html.noanim *,html.noanim *:before,html.noanim *:after{transition:none!important;animation:none!important}
+.pnw{display:flex;flex-direction:column;line-height:1.15}.pnw small{font-size:9.5px;font-weight:600;letter-spacing:.3px;opacity:.78;white-space:nowrap}
+/* card info strip + footer credit */
+.card .info{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:6px;margin:9px 0 2px;padding-top:8px;border-top:1px dashed var(--bd)}
+.card .info div{display:block;min-width:0}.card .info small{display:block;font-size:8.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--m)}
+.card .info b{display:block;font-size:11px;font-weight:700;color:var(--t);line-height:1.25;overflow-wrap:anywhere}
+.status{grid-template-columns:auto auto 1fr auto auto}
+.status .by{font-size:11px;font-weight:600;color:var(--m);padding:0 16px;border-right:1px solid var(--bd);white-space:nowrap;letter-spacing:.2px}
+.card .info.multi{grid-template-columns:auto auto 1fr;gap:6px 12px}
+.card .info .evc{display:flex;gap:3px;flex-wrap:nowrap;margin-top:2px}.card .info .evc b{display:inline-block;background:#6a4bd0;color:#fff;border-radius:7px;padding:1px 5px;font-size:10px;white-space:nowrap}
+</style>
+</head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="tf-liquid" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency=".008 .012" numOctaves="2" seed="4" result="n"/><feGaussianBlur in="n" stdDeviation="2" result="b"/><feDisplacementMap in="SourceGraphic" in2="b" scale="30" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
+<header><div class="logo">T</div><div><h1>TRACFONE <span>CONSOLE</span></h1><div class="sub">Automated test-evidence workspace</div></div>
+<nav class="box"><button class="on" data-v="dash"><b>⌂</b>Dashboard</button><button data-v="hist"><b>◷</b>Run History</button><button data-v="set"><b>⚙</b>Settings</button></nav>
+<div class="tsw box lq" id="tsw" title="Change theme">🎨 Theme<i data-th="classic" title="Ocean Blue" style="background:linear-gradient(135deg,#05344b,#27c1f0)"></i><i data-th="light" title="Lagoon Light" style="background:linear-gradient(135deg,#ffffff,#2fb8ec)"></i><i data-th="dark" title="Dark" style="background:linear-gradient(135deg,#2a2112,#f4c660)"></i><i data-th="royal" title="Royal Gold" style="background:linear-gradient(135deg,#f0da92,#2f6285)"></i></div>
+<button class="hlp box" id="help" title="Open the welcome guide" aria-label="Open the welcome guide">?</button>
+<div class="prof box" id="prof"><div class="av" id="av">W</div><span id="pn">Work</span><i class="dot off" id="pdot"></i><div id="pm" class="box"></div></div></header>
+
+<div id="v-dash" class="view on" style="display:contents">
+<section class="bar box"><div><label>ADB DEVICE</label><div class="row"><select id="dev"></select><button id="rf" title="Refresh devices">⟳</button></div></div>
+<div><label>CALL NUMBER <span style="font-weight:400">(Optional for Scenario 6)</span></label><input id="num" placeholder="e.g. 8310258630" inputmode="tel"></div>
+<div><label>EVIDENCE ROOT</label><div class="row"><input id="root"><button id="br" title="Browse">📁</button></div></div>
+<label class="sw"><input type="checkbox" id="clr" checked>Clear recent apps after run</label></section>
+<main class="view on" id="main" style="grid-template-columns:minmax(330px,.8fr) minmax(0,1.5fr);gap:14px">
+<section class="panel box"><div class="ph"><h2>SCENARIOS</h2><input class="in" id="q" placeholder="Search scenarios…"></div>
+<div class="fl" id="fl"><button class="on" data-f="all">✦ All</button><button data-f="wifi">≋ Wi-Fi</button><button data-f="data">⇅ Data</button><button data-f="combined">⛓ Combined</button><button class="so" id="so" title="Click to change card order: Default / Shots / Type">Sort: Default</button></div>
+<div class="grid" id="grid"></div></section>
+<section class="panel box"><div class="ph"><h2>EXECUTION</h2><span style="margin-left:auto"></span><button id="stop" disabled>■ Stop</button><button id="clrlog">Clear log</button></div>
+<div class="top"><div class="ring"><svg width="84" height="84"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--ac)"/><stop offset="1" style="stop-color:var(--b1)"/></linearGradient></defs><circle cx="42" cy="42" r="35" fill="none" stroke="var(--bd)" stroke-width="8"/><circle id="arc" cx="42" cy="42" r="35" fill="none" stroke="url(#rg)" stroke-width="8" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="220" style="transition:stroke-dashoffset .6s"/></svg><div class="n"><div><span id="cnt">0</span><small id="of">of 0</small></div></div></div>
+<div id="stage"><b id="sb">Ready</b><span id="ss">Pick a scenario and press Run.</span></div></div>
+<div class="stp" id="stp"></div><div id="alert">📞 Call this phone back NOW from the number shown in the log</div><div id="coach" class="coach" role="status" aria-live="polite"></div>
+<div class="mid"><div class="phone"><label>LIVE SCREEN</label><div class="fr"><img id="shot"><span id="ps">Latest screenshot<br>appears here</span></div><div class="ped"></div></div>
+<div class="tabs"><div class="tb" id="tb"><button class="on" data-t="log">▤ Live log</button><button data-t="steps">☰ Run steps</button><button data-t="ev">▣ Evidence</button><button data-t="info">ⓘ Device info</button></div>
+<div class="tp on" id="t-log"><div id="log"><div class="s">Ready. Select a scenario to begin.</div></div></div><div class="tp" id="t-steps"></div><div class="tp" id="t-ev"></div><div class="tp" id="t-info"></div></div></div></section></main></div>
+
+<div class="view" id="v-hist"><section class="panel box"><div class="ph"><h2>RUN HISTORY</h2><button style="margin-left:auto" id="hc">Clear history</button></div><div id="hb"></div></section></div>
+<div class="view" id="v-set"><section class="panel box"><div class="ph"><h2>DISPLAY THEME</h2></div><div class="themes" id="themes"></div>
+<div class="row" style="justify-content:flex-end"><button class="go" style="flex:none" id="ap">Apply Theme</button></div>
+<div class="ph"><h2>PREFERENCES</h2></div><div class="two"><label class="sw"><input type="checkbox" id="snd" checked>Play a beep when a call-back is needed</label><label class="sw"><input type="checkbox" id="wl">Show the welcome guide every time the console opens</label></div>
+<label class="sw" style="margin-top:8px"><input type="checkbox" id="anim" checked>Enable animations</label>
+<div class="row"><button id="replay">▶ Replay the welcome guide</button></div>
+<div class="ph"><h2>PROFILES</h2><span class="sub">The profile stores the call number, evidence root and clear-recents choice.</span></div><div class="row"><button id="sp">Save current values to this profile</button><button id="dp">Delete this profile</button></div></section></div>
+
+<footer class="status box"><div><i class="ck off" id="c1">–</i><span><b>ADB</b><small id="s1">Checking…</small></span></div><div><i class="ck off" id="c2">–</i><span><b>Evidence path</b><small id="s2">Checking…</small></span></div>
+<div><i class="ck off" id="c3">●</i><span><b id="s3">No active run</b><small id="s3b">Select a scenario and press Run.</small></span></div><div class="by">Developed by Sachin</div><div id="clock"></div></footer>
+<div id="wel" class="ov" role="dialog" aria-modal="true" aria-labelledby="kt-t"><div class="kit">
+<div class="kh"><div class="logo" style="width:34px;height:34px;font-size:15px;border-radius:10px">T</div><h2 id="kt-t">Welcome to TRACFONE <span style="color:var(--ac)">CONSOLE</span></h2><span class="kc" id="kc">Step 1 of 6</span><button class="kx" id="kx" title="Close (Esc)" aria-label="Close the guide">✕</button></div>
+<div class="kbody">
+<section class="ksl on"><h3>Your automated test-evidence workspace</h3>
+<p>A two-minute tour of everything on this screen. It opens <b>once</b> — reopen it any time with the <b>?</b> button at the top right, or from Settings.</p>
+<div class="kgrid"><div class="kcard"><span class="ico">▶</span><b>Run scenarios</b><span>Pick a scenario card, press Run, and the console drives the phone for you.</span></div>
+<div class="kcard"><span class="ico">▣</span><b>Capture evidence</b><span>Every screenshot is saved and organised automatically in your evidence folder.</span></div>
+<div class="kcard"><span class="ico">✓</span><b>Reliable results</b><span>Live progress, clear steps and plain-language prompts whenever you need to act.</span></div></div>
+<h5>IN THIS TOUR</h5><div class="kgrid"><div class="kcard"><span>① Set up · ② Scenarios · ③ Phone calls · ④ While it runs · ⑤ Make it yours</span></div></div></section>
+<section class="ksl"><h3>Set up before you run</h3><p>Four fields at the top of the dashboard — fill them once, then save them in a profile.</p>
+<div class="kgrid"><div class="kcard"><b>ADB DEVICE</b><span>Plug the phone in with USB debugging on. It appears in the list; press ⟳ if it doesn't. The status bar at the bottom shows ADB health.</span></div>
+<div class="kcard"><b>CALL NUMBER</b><span>The number of your <b>helper phone</b> — the phone that receives and places the test calls. 5–15 digits. Needed for every scenario except 6.</span></div>
+<div class="kcard"><b>EVIDENCE ROOT</b><span>The folder where screenshots are saved. Use 📁 to browse. A green ✓ in the status bar means the folder exists and is writable.</span></div>
+<div class="kcard"><b>CLEAR RECENT APPS AFTER RUN</b><span>Tidies the phone's recent apps once a run finishes successfully.</span></div>
+<div class="kcard"><b>PROFILES</b><span>The profile menu (top right, e.g. “Work”) remembers call number, evidence root and the clear-recents choice. Save with Settings → Profiles.</span></div></div></section>
+<section class="ksl"><h3>The scenarios</h3><p>Find a card with search, the All / Wi-Fi / Data / Combined filters or Sort. The 📄 button beside Run opens that scenario's evidence.</p><div class="kgrid" id="k-sc"></div></section>
+<section class="ksl"><h3>📞 Phone calls in 3+5+9B</h3><p>This scenario places <b>3 calls</b> to your helper phone (the CALL NUMBER). Here is exactly what to do — the console also shows a live banner and beeps at every step.</p><div id="k-calls"></div>
+<div class="kwarn">Keep the helper phone unlocked, ringer on, and within reach for the whole run. Other scenarios that place a test call show the same “Pick up the call” banner.</div></section>
+<section class="ksl"><h3>While a run is active</h3><p>Everything updates live — you never have to guess what the console is doing.</p>
+<div class="kgrid"><div class="kcard"><b>Progress ring &amp; stages</b><span>Screenshots taken out of the total, plus Pre-flight → Before update → Restart → Update complete → After update → Report.</span></div>
+<div class="kcard"><b>Live screen</b><span>The latest screenshot from the phone, as it is captured.</span></div>
+<div class="kcard"><b>Live log · Run steps</b><span>Every action in real time (green = success, amber = warning, red = problem) and a tidy step timeline.</span></div>
+<div class="kcard"><b>Evidence · Device info</b><span>Browse saved screenshots and open their folder; see model, Android, build, patch level, carrier and battery.</span></div>
+<div class="kcard"><b>Call banner</b><span>Tells you when to answer, when to call back, and counts down the time you have.</span></div>
+<div class="kcard"><b>■ Stop</b><span>Ends the run immediately. “Clear log” only empties the on-screen log.</span></div></div>
+<h5>AROUND THE CONSOLE</h5>
+<div class="kgrid"><div class="kcard"><b>◷ Run History</b><span>Date, scenario, device, shots, time and status of every past run.</span></div>
+<div class="kcard"><b>Device Setup · Wi-Fi</b><span>Carrier / SKU / SIM, build flashing and saved Wi-Fi networks — shown when those add-ons are installed.</span></div>
+<div class="kcard"><b>⚙ Settings</b><span>Theme, call sound, this guide and profiles.</span></div></div></section>
+<section class="ksl"><h3>Make it yours</h3><p>Choose a look and your preferences. You can change all of this later in Settings.</p>
+<h5>THEME</h5><div class="kth" id="k-th"></div>
+<div class="krow"><label class="sw"><input type="checkbox" id="ksn" checked>Beep when a call needs me</label><button id="ktest" style="justify-self:start">🔔 Test the beep</button>
+<label class="sw"><input type="checkbox" id="kre">Show this guide every time the console opens</label><span class="sub">Leave off to see it only once.</span></div></section>
+</div>
+<div class="kf"><button id="kb">← Back</button><div class="kdots" id="kdots"></div><button class="go kbtn" id="kn" style="flex:none">Next →</button></div>
+</div></div>
+<div id="pre" class="ov" role="dialog" aria-modal="true" aria-labelledby="pre-t"><div class="kit">
+<div class="kh"><span style="font-size:22px">📞</span><h2 id="pre-t">3 calls need you</h2><button class="kx" id="pre-x" style="margin-left:auto" aria-label="Close">✕</button></div>
+<div class="kbody" id="pre-b"></div>
+<div class="kf"><label class="sw" style="margin:0" id="pre-rml"><input type="checkbox" id="pre-rm">Don't show this reminder again</label><span style="margin-left:auto"></span><button id="pre-c">Cancel</button><button class="go kbtn" id="pre-go" style="flex:none">▶ I'm ready — start the run</button></div>
+</div></div>
+<div id="toast"></div>
+<script>
+/* Scenario list: [code, title, tag, shots, mode, type, extra-set-flag, evidence-codes] — modes are the SAME values the server already accepts */
+const SC=[["2A","Target → Dummy","WI-FI",["35 shots"],"target_to_dummy","wifi",0,["2A"]],["2B","Target → Dummy","DATA",["35 shots"],"target_to_dummy_data","data",0,["2B"]],
+["3+5+9B","Source → Target","WI-FI",["36 + 38 shots"],"combined_3_5","wifi",1,["3","5","8","9B"]],["4","Source → Target","DATA",["38 shots"],"source_to_target_data","data",0,["4"]],
+["6","Combine 3 · 2A · 4 · 2B","WI-FI + DATA",["No phone needed"],"scenario6","combined",0,["6"]],["7","Source → Target","WI-FI · SPANISH",["24 shots"],"source_to_target_wifi_es","wifi",0,["7"]],
+["9A","Target → Corrupt","WI-FI",["17 shots"],"target_to_corrupt_wifi_9a","wifi",0,["9A"]]];
+const $=i=>document.getElementById(i),API=async(p,o)=>{try{const r=await fetch("/api/x/"+p,o);return r.ok?await r.json():null}catch(e){return null}};
+const POST=(p,b)=>API(p,{method:"POST",body:JSON.stringify(b||{})});
+let busy=false,since=0,lastShots=-1,t0=0,el="",cfg=null,flt="all",srt=0,evCode=null,tab="log",pending="classic";
+const SORTS=["Default","Shots","Type"],shotsOf=s=>+(/\d+/.exec(s[3][0])||[0])[0];
+let curMode="",noBeep=false,firstTick=true;
+/* ---------- v3 additions: call guide, live call coach, welcome kit (UI only; no backend change) ---------- */
+const PH='<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1z"/></svg>';
+function tone(){try{const c=new(window.AudioContext||webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.value=.15;o.start();setTimeout(()=>{o.stop();c.close()},350)}catch(e){}}
+function ring2(){if(cfg&&cfg.sound===false)return;tone();setTimeout(tone,450)}
+const cleanNum=()=>$("num").value.replace(/[\s-]/g,"");
+function callSteps(num){const n=num?"<b>"+esc(num)+"</b>":"your helper phone";
+const same=`<dt>Happens</dt><dd>The test phone dials ${n}.</dd><dt>You do</dt><dd><b>Pick up the call</b>, then just leave it.</dd><dt>Automatic</dt><dd>The console takes its screenshots and hangs up by itself — don't hang up.</dd>`;
+return`<div class="tl"><div class="tls a"><div class="tln">1</div><div><h4>Call 1 · Answer it<span class="lim">30 s to answer</span></h4><div class="wh">Early in the run — before the update starts</div><dl>${same}</dl></div></div>
+<div class="tls b"><div class="tln">2</div><div><h4>Missed call · Call back<span class="lim">2 min to call back</span></h4><div class="wh">About 1 minute after the update starts</div><dl><dt>Happens</dt><dd>The test phone rings ${n} for a few seconds and cuts — a <b>missed call</b>. A beep sounds and the banner turns amber.</dd><dt>You do</dt><dd><b>Call the test phone back</b> from ${n}. The banner counts down; the reminder repeats every 60 s.</dd><dt>Automatic</dt><dd>It captures the incoming call and declines it. Leave it — it cuts by itself.</dd></dl></div></div>
+<div class="tls a"><div class="tln">3</div><div><h4>Call 3 · Answer it<span class="lim">30 s to answer</span></h4><div class="wh">At the very end — after the update finishes</div><dl>${same}</dl></div></div></div>`}
+const nocall=()=>{try{return localStorage.getItem("tf-nocall")=="1"}catch(e){return false}};
+function go(m){if(m=="combined_3_5"&&!nocall())openPre(m);else run(m)}
+function openPre(mode){const num=cleanNum(),okN=/^\+?\d{5,15}$/.test(num),okD=!!$("dev").value;
+$("pre-t").textContent=mode?"Before you start: 3 calls need you":"Scenario 3+5+9B · phone-call guide";
+$("pre-b").innerHTML=`<p style="margin-top:0;color:var(--m)">The <b>helper phone</b> is the phone whose number you typed in CALL NUMBER${okN?" (<b>"+esc(num)+"</b>)":""}. Keep it unlocked, ringer on, in your hand.</p>`+callSteps(okN?num:"")+(mode&&(!okD||!okN)?`<div class="kwarn">${!okD?"No device is selected. ":""}${!okN?"Enter a 5–15 digit Call number first.":""}</div>`:"");
+$("pre-go").style.display=$("pre-rml").style.display=mode?"":"none";$("pre-go").disabled=!!mode&&!(okN&&okD);$("pre-go").dataset.m=mode||"";$("pre-c").textContent=mode?"Cancel":"Close";
+$("pre").classList.add("on");setTimeout(()=>$(mode&&!$("pre-go").disabled?"pre-go":"pre-c").focus(),60)}
+function closePre(){$("pre").classList.remove("on")}
+$("pre-x").onclick=$("pre-c").onclick=closePre;
+$("pre-go").onclick=()=>{const m=$("pre-go").dataset.m;if($("pre-rm").checked)try{localStorage.setItem("tf-nocall","1")}catch(e){}closePre();if(m)run(m)};
+/* live call coach: reads the SAME log lines the backend already prints */
+const CO={on:false,step:0,back:false,done:[],dl:0};
+function coachDraw(kind,title,sub){const comb=curMode=="combined_3_5";CO.on=true;
+const chips=comb?'<div class="cs">'+["Answer","Call back","Answer"].map((t,i)=>`<i class="${CO.done.includes(i+1)?"d":CO.step==i+1?"a":""}">${CO.done.includes(i+1)?"✓ ":(i+1)+" "}${t}</i>`).join("")+"</div>":"";
+const c=$("coach");c.className="coach on "+kind;c.innerHTML=`<div class="ci">${PH}</div><div class="cb"><b>${title}</b><span>${sub}</span></div>${chips}<div class="ct" id="ctm"></div>`;tickCo()}
+function tickCo(){const e=$("ctm");if(!e)return;const r=CO.dl-Date.now();e.textContent=CO.dl&&r>0?"⏱ "+fmt(r):""}setInterval(tickCo,500);
+function coachReset(){CO.on=false;CO.step=0;CO.back=false;CO.done=[];CO.dl=0;$("coach").className="coach";$("coach").innerHTML=""}
+function coachEnd(){CO.on=false;CO.dl=0;setTimeout(()=>{if(!CO.on)$("coach").className="coach"},3500)}
+function coach(l){if(curMode=="scenario6")return;const comb=curMode=="combined_3_5",n=cleanNum()?"<b>"+esc(cleanNum())+"</b>":"your helper phone";
+if(/📞 Dialing/.test(l)){CO.step=comb?(CO.back?3:1):0;CO.dl=0;coachDraw("ans","Pick up the call now"+(comb?" (call "+CO.step+" of 3)":""),`The test phone is calling ${n}. Answer within 30 seconds, then leave it — the console hangs up by itself.`);if(!noBeep)ring2();return}
+if(/Call ANSWERED/.test(l)){if(comb&&CO.step&&!CO.done.includes(CO.step))CO.done.push(CO.step);coachDraw("ok","Answered ✓ — leave it alone","Don't hang up. The test phone ends this call automatically after its screenshot.");return}
+if(/Call was not answered/.test(l)){coachDraw("bad","That call wasn't answered","The screenshot is marked missing. Keep the helper phone ready for the next call.");return}
+if(/MISSED-CALL ALERT|CALL THIS PHONE BACK|INCOMING CALL DURING THE UPDATE/i.test(l)){CO.back=true;CO.step=2;const m=/within ~(\d+) s/.exec(l);if(m)CO.dl=Date.now()+m[1]*1000;
+coachDraw("back","Missed call — call the test phone back now",`Dial the test phone from ${n} before the timer ends. A beep repeats every 60 s. When it connects, leave it — it declines by itself.`);return}
+const w=/\((\d+) s left\)/.exec(l);if(w&&CO.back&&CO.step==2){CO.dl=Date.now()+w[1]*1000;return}
+if(/Incoming call detected/.test(l)){if(comb&&!CO.done.includes(2))CO.done.push(2);CO.dl=0;coachDraw("ok","Call-back received ✓","Captured. Leave it — the test phone declines the call by itself. Nothing else to do for this step.");return}
+if(/No incoming call before the time limit/.test(l)){CO.dl=0;coachDraw("bad","No call-back received","That screenshot is marked missing and the run continues. Be ready to answer the final call.")}}
+/* welcome kit */
+const KN=6,DESC={"2A":"Target → Dummy transition over Wi-Fi. Captures the full 35-shot evidence set.","2B":"The same Target → Dummy transition, run over mobile data (35 shots).","3+5+9B":"One run, two phases (36 + 38 shots) that produce the evidence for Scenarios 3, 5, 8 and 9B. Includes 3 phone calls — see the next step.","4":"Source → Target transition over mobile data; 38-shot evidence set.","6":"Builds Scenario 6 by copying the finished evidence of 3, 2A, 4 and 2B into one folder. No phone needed — run those first.","7":"Source → Target over Wi-Fi on a Spanish-language phone (24 shots).","9A":"Target → Corrupt transition over Wi-Fi (17 shots)."};
+const kitSeen=()=>{try{return localStorage.getItem("tf-kit2")=="1"}catch(e){return true}};let kstep=0;
+function kitThemes(){$("k-th").innerHTML=TH.map(t=>`<button data-th="${t[0]}" class="${t[0]==pending?"on":""}"><i data-theme="${t[0]}" style="background:var(--bg)"></i><b>${t[1]}</b><small>${t[2]}</small></button>`).join("")}
+function kitGo(n){kstep=Math.max(0,Math.min(KN-1,n));document.querySelectorAll(".ksl").forEach((s,i)=>s.classList.toggle("on",i==kstep));document.querySelectorAll("#kdots i").forEach((d,i)=>d.classList.toggle("on",i==kstep));
+$("kc").textContent="Step "+(kstep+1)+" of "+KN;$("kn").textContent=kstep==KN-1?"Get started ✓":"Next →";$("kb").style.visibility=kstep?"visible":"hidden";document.querySelector("#wel .kbody").scrollTop=0}
+function kitOpen(){$("k-sc").innerHTML=SC.map(s=>`<div class="kcard sc" data-ty="${s[2].includes("SPANISH")?"es":s[5]}"><b>${s[0]}<em>${s[2]}</em></b><span>${s[1]} · ${s[3][0]}</span><span style="margin-top:3px">${DESC[s[0]]||""}</span></div>`).join("");
+$("k-calls").innerHTML=callSteps("");$("kdots").innerHTML=Array.from({length:KN},(_,i)=>`<i data-k="${i}" title="Step ${i+1}"></i>`).join("");kitThemes();
+$("kre").checked=false;$("ksn").checked=!(cfg&&cfg.sound===false);kitGo(0);$("wel").classList.add("on");$("help").classList.remove("nudge");setTimeout(()=>$("kn").focus(),60)}
+async function kitDone(){const every=$("kre").checked,snd=$("ksn").checked;$("wel").classList.remove("on");try{localStorage.setItem("tf-kit2","1");localStorage.setItem("tf-help","1")}catch(e){}$("help").classList.remove("nudge");
+const s=await POST("settings",{theme:pending,sound:snd,welcomed:!every});if(s)cfg=s;else if(cfg){cfg.sound=snd;cfg.welcomed=!every}$("wl").checked=every;$("snd").checked=snd}
+$("kn").onclick=()=>kstep==KN-1?kitDone():kitGo(kstep+1);$("kb").onclick=()=>kitGo(kstep-1);$("kx").onclick=kitDone;
+$("kdots").onclick=e=>{const d=e.target.closest("[data-k]");if(d)kitGo(+d.dataset.k)};
+$("k-th").onclick=e=>{const b=e.target.closest("[data-th]");if(!b)return;pending=b.dataset.th;setTheme(pending);kitThemes()};
+$("ktest").onclick=tone;$("help").onclick=kitOpen;$("replay").onclick=kitOpen;
+document.addEventListener("keydown",e=>{if($("wel").classList.contains("on")){if(e.key=="Escape")kitDone();else if(e.key=="ArrowRight")$("kn").click();else if(e.key=="ArrowLeft"&&kstep)kitGo(kstep-1)}else if($("pre").classList.contains("on")&&e.key=="Escape")closePre()});
+try{if(localStorage.getItem("tf-help")!="1")$("help").classList.add("nudge")}catch(e){}
+
+/* animations switch (default ON) */
+function setAnim(on){document.documentElement.classList.toggle("noanim",!on);try{localStorage.setItem("tf-anim",on?"1":"0")}catch(e){}}
+try{const a=localStorage.getItem("tf-anim")!="0";$("anim").checked=a;setAnim(a)}catch(e){}
+$("anim").onchange=()=>{setAnim($("anim").checked);toast($("anim").checked?"Animations on.":"Animations off.")};
+
+/* per-card info strip (UI only) */
+const NET={"WI-FI":"Wi-Fi","DATA":"Mobile data","WI-FI + DATA":"Wi-Fi + data","WI-FI · SPANISH":"Wi-Fi · Spanish"};
+function info(s){return`<div class="info${s[7].length>1?" multi":""}"><div><small>Network</small><b>${NET[s[2]]||s[2]}</b></div><div><small>Call no.</small><b>${s[0]=="6"?"Not needed":"Required"}</b></div><div><small>Evidence</small>${s[7].length>1?'<span class="evc">'+s[7].map(x=>"<b>"+x+"</b>").join("")+"</span>":"<b>"+s[7][0]+"</b>"}</div></div>`}
+
+/* ---------- scenario cards ---------- */
+function cards(anim){$("grid").classList.toggle("ent",!!anim);const q=$("q").value.toLowerCase();let l=SC.filter(s=>(flt=="all"||s[5]==flt)&&(s[0]+s[1]+s[2]).toLowerCase().includes(q));
+if(srt==1)l=[...l].sort((a,b)=>shotsOf(b)-shotsOf(a));if(srt==2)l=[...l].sort((a,b)=>a[5].localeCompare(b[5]));
+const IC={wifi:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 9a15 15 0 0 1 20 0M5.5 12.5a10 10 0 0 1 13 0M9 16a5 5 0 0 1 6 0"/><circle cx="12" cy="19.5" r="1" fill="currentColor"/></svg>',data:'<svg class="ic" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="15" width="3.5" height="6" rx="1"/><rect x="9" y="11" width="3.5" height="10" rx="1"/><rect x="15" y="6" width="3.5" height="15" rx="1"/></svg>',combined:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>'};
+$("grid").innerHTML=l.map((s,i)=>`<div class="card box" style="--i:${i}" data-ty="${s[2].includes("SPANISH")?"es":s[5]}">${IC[s[5]==="combined"?"combined":s[5]]}<div class="hd"><span class="code">${s[0]}</span><span class="tag">${s[2]}</span></div><h3>${s[1]}</h3>
+<span class="chip">${s[3][0]}</span>${info(s)}${s[6]?'<button class="calls" data-cg="1" title="See exactly when you need to answer or call back">'+PH+'<span>Needs you on the phone: answer · call back · answer</span></button>':""}
+<div class="act"><button class="go" data-m="${s[4]}">▶ ${s[4]=="scenario6"?"Build ":"Run "}${s[0]}</button><button class="doc" data-c="${s[0]}" title="Show evidence for ${s[0]}">📄</button></div></div>`).join("")||'<div class="no">No scenarios match.</div>';
+document.querySelectorAll(".go[data-m]").forEach(b=>{b.onclick=()=>go(b.dataset.m);b.disabled=busy});document.querySelectorAll(".calls").forEach(b=>b.onclick=()=>openPre(null))
+document.querySelectorAll(".doc").forEach(b=>b.onclick=()=>{evCode=SC.find(s=>s[0]==b.dataset.c)[7];setTab("ev")})}
+$("grid").addEventListener("mousemove",e=>{const c=e.target.closest(".card");if(!c)return;const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;c.style.setProperty("--mx",x*100+"%");c.style.setProperty("--my",y*100+"%");c.style.transform=`translateY(-5px) rotateY(${(x-.5)*9}deg) rotateX(${(.5-y)*9}deg) translateZ(8px)`});
+$("grid").addEventListener("mouseout",e=>{const c=e.target.closest(".card");if(c&&!c.contains(e.relatedTarget))c.style.transform=""});
+$("q").oninput=()=>cards();$("fl").onclick=e=>{const b=e.target.closest("[data-f]");if(!b)return;flt=b.dataset.f;document.querySelectorAll("#fl [data-f]").forEach(x=>x.classList.toggle("on",x==b));cards(1)};
+$("so").onclick=()=>{srt=(srt+1)%3;$("so").textContent="Sort: "+SORTS[srt];$("so").classList.toggle("on",srt>0);cards(1)};
+/* ---------- run logic (unchanged behaviour) ---------- */
+function pill(c,t){const d=$("pdot");d.className="dot "+c;d.title=t}
+function beep(){if(cfg&&cfg.sound===false)return;try{const c=new(window.AudioContext||webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.value=.15;o.start();setTimeout(()=>{o.stop();c.close()},400)}catch(e){}}
+const fmt=ms=>{const t=Math.floor(ms/1e3);return String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0")};
+function addLog(l){const d=document.createElement("div");d.textContent=l;
+if(/❌|failed|Traceback/i.test(l))d.className="e";else if(/⚠️|!!!/.test(l))d.className="w";else if(/✅|🧹|complete/i.test(l))d.className="k";else if(/📸|🖼️/.test(l))d.className="s";
+$("log").appendChild(d);while($("log").children.length>600)$("log").firstChild.remove();$("t-log").scrollTop=1e9;
+if(/CALL THIS PHONE BACK/i.test(l)){if($("alert").style.display!="block")beep();$("alert").style.display="block"}if(/Incoming call detected|Scenario 9B extra/i.test(l))$("alert").style.display="none";coach(l)}
+async function devs(){if(busy)return;try{const d=await(await fetch("/api/devices")).json(),s=$("dev"),cur=s.value;
+s.innerHTML=d.devices.length?d.devices.map(x=>`<option>${x}</option>`).join(""):"<option value=''>No device detected</option>";if(d.devices.includes(cur))s.value=cur;
+if(!$("root").value)$("root").value=d.root;pill(d.devices.length?"":"off",d.devices.length?"Device ready":"No device")}catch(e){}}
+async function run(m){const r=await(await fetch("/api/run",{method:"POST",body:JSON.stringify({mode:m,serial:$("dev").value,number:$("num").value,root:$("root").value,clear:$("clr").checked})})).json();
+if(r.error){toast(r.error,1);return}since=0;lastShots=-1;curMode=m;coachReset();$("log").innerHTML="";$("shot").style.display="none";$("ps").style.display="";setTab("log")}
+$("stop").onclick=()=>fetch("/api/stop",{method:"POST",body:"{}"});$("clrlog").onclick=()=>$("log").innerHTML="";$("rf").onclick=()=>devs();
+async function tick(){try{const s=await(await fetch("/api/state?since="+since)).json();since=s.next;curMode=s.mode||curMode;noBeep=firstTick;firstTick=false;s.lines.forEach(addLog);noBeep=false;busy=s.run;document.body.classList.toggle("running",!!s.run);if(!s.run&&CO.on)coachEnd();
+document.querySelectorAll(".go[data-m]").forEach(b=>b.disabled=s.run);$("stop").disabled=!s.run;
+const t=s.total||1,f=Math.min(s.shots,t);$("cnt").textContent=f;$("of").textContent="of "+s.total;$("arc").style.strokeDashoffset=220*(1-f/t);
+if(s.run){if(!t0)t0=Date.now();el=fmt(Date.now()-t0);pill("","Running");$("sb").textContent="Running • "+el;$("ss").textContent="Do not disconnect the device."}else t0=0;
+if(!s.run&&s.status=="complete"){$("sb").textContent="Complete ✓";$("ss").textContent="Evidence saved"+(el?" • took "+el:"")+".";$("alert").style.display="none"}
+else if(!s.run&&s.status=="failed"){pill("bad","Failed");$("sb").textContent="Stopped";$("ss").textContent="See the log for details.";$("alert").style.display="none"}
+const k=s.run+"|"+s.status;if(s.run||k!=lastK){lastK=k;run2()}
+if(s.shots!=lastShots&&s.mode&&s.mode!="scenario6"&&s.shots>0){lastShots=s.shots;const i=$("shot");i.onload=()=>{i.style.display="block";$("ps").style.display="none"};i.src="/api/latest?"+Date.now()}}catch(e){}}
+/* ---------- new features (all read-only helpers; need tracfone_console_api.py) ---------- */
+let lastK="";async function run2(){const p=await API("progress");if(!p)return;
+$("stp").innerHTML=p.steps.map(x=>`<div class="${x.state}"><i></i>${x.name}</div>`).join("");
+$("t-steps").innerHTML=p.steps.map(x=>`<div class="sl ${x.state}"><i></i>${x.name}<em>${x.at!=null?fmt(x.at*1e3):""}</em></div>`).join("");
+$("s3").textContent=p.run?"Run active":p.status=="complete"?"Run complete":p.status=="failed"?"Run stopped":"No active run";
+$("s3b").textContent=p.run?"Do not disconnect the device.":p.status=="ready"?"Select a scenario and press Run.":"See Run History for details.";$("c3").className="ck"+(p.run?"":p.status=="failed"?" bad":" off")}
+async function checks(){const c=await API("preflight");if(!c)return;const ok=c.adb&&c.devices.length>0;$("c1").className="ck"+(ok?"":" bad");$("c1").textContent=ok?"✓":"!";
+$("s1").textContent=ok?"Connected • "+c.devices[0]:c.adb?"No device detected":"ADB not found";const r=c.root_ok&&c.root_writable;$("c2").className="ck"+(r?"":" bad");$("c2").textContent=r?"✓":"!";$("s2").textContent=r?c.root:"Folder missing or not writable"}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>"&#"+c.charCodeAt(0)+";");
+async function setTab(t){tab=t;document.querySelectorAll("#tb button").forEach(b=>b.classList.toggle("on",b.dataset.t==t));document.querySelectorAll(".tp").forEach(p=>p.classList.toggle("on",p.id=="t-"+t));
+if(t=="ev"){const e=await API("evidence?run="+(busy?1:0)),h=$("t-ev");if(!e){h.textContent="Evidence browser needs tracfone_console_api.py.";return}
+let f=e.folders;if(evCode)f=f.filter(x=>evCode.some(c=>new RegExp("Scenario "+c.replace("+","\\+")+"\\b").test(x.name)));
+h.innerHTML=(evCode?`<div class="ef"><b>Showing ${esc(evCode.join(", "))}</b><button style="margin-left:auto" id="ea">Show all</button></div>`:"")+(e.recent.length?'<div class="eg">'+e.recent.map(x=>`<img loading="lazy" title="${esc(x.name)}" src="/api/x/file?path=${encodeURIComponent(x.path)}">`).join("")+"</div>":"")+
+(f.map(x=>`<div class="ef">📁 ${esc(x.name)}<em>${x.count} shots</em><button data-p="${encodeURIComponent(x.path)}">Open</button></div>`).join("")||'<div class="no">No evidence yet.</div>');
+h.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>POST("open",{path:decodeURIComponent(b.dataset.p)}));if($("ea"))$("ea").onclick=()=>{evCode=null;setTab("ev")}}
+if(t=="info"){const d=await API("device?serial="+encodeURIComponent($("dev").value)),h=$("t-info");if(!d||d.error){h.textContent=d?d.error:"Device info needs tracfone_console_api.py.";return}
+h.innerHTML=(d.busy?'<div class="no">Run in progress — showing last known values.</div>':"")+'<div class="kv">'+[["Serial",d.serial],["Brand",d.brand],["Model",d.model],["Android",d.android],["Build",d.build],["Security patch",d.patch],["Carrier",d.carrier],["Battery",d.battery!=null?d.battery+"%":""]].map(r=>`<span>${r[0]}</span><span>${esc(r[1]||"—")}</span>`).join("")+"</div>"}}
+$("tb").onclick=e=>{const b=e.target.closest("[data-t]");if(b)setTab(b.dataset.t)};
+async function hist(){const h=await API("history");$("hb").innerHTML=h&&h.length?"<table><tr><th>Date</th><th>Scenario</th><th>Device</th><th>Shots</th><th>Time</th><th>Status</th></tr>"+h.map(x=>{const s=SC.find(z=>z[4]==x.mode);return`<tr><td>${new Date(x.start*1e3).toLocaleString()}</td><td>${s?s[0]:esc(x.mode)}</td><td>${esc(x.serial||"—")}</td><td>${x.shots}/${x.total}</td><td>${fmt(x.seconds*1e3)}</td><td class="st ${x.status}">${x.status}</td></tr>`}).join("")+"</table>":'<div class="no">'+(h?"No runs yet.":"Run history needs tracfone_console_api.py.")+"</div>"}
+$("hc").onclick=async()=>{await POST("history/clear");hist()};
+/* ---------- views, themes, profiles, settings ---------- */
+function view(v){document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.v==v));$("v-dash").style.display=v=="dash"?"contents":"none";$("main").style.display=v=="dash"?"grid":"none";
+$("v-hist").classList.toggle("on",v=="hist");$("v-set").classList.toggle("on",v=="set");if(v=="hist")hist();if(v=="set")themes()}
+document.querySelector("nav").onclick=e=>{const b=e.target.closest("[data-v]");if(b)view(b.dataset.v)};
+const TH=[["classic","Ocean Blue","Deep-sea glass. Default look"],["light","Lagoon Light","Bright aqua, airy and clean"],["dark","Dark","Golden glow on dark glass"],["royal","Royal Gold","Golden texture, navy buttons"]];
+function setTheme(t){const h=document.documentElement;h.classList.add("tt");clearTimeout(setTheme.x);setTheme.x=setTimeout(()=>h.classList.remove("tt"),450);h.dataset.theme=t;document.querySelectorAll("#tsw i").forEach(i=>i.classList.toggle("on",i.dataset.th==t));try{localStorage.setItem("tf-theme",t)}catch(e){}}
+function themes(){$("themes").innerHTML=TH.map(t=>`<div class="tc box ${t[0]==pending?"on":""}" data-t="${t[0]}" data-theme="${t[0]}" style="background:var(--pn)"><div class="sw2" style="background:var(--bg)"></div><b>${t[1]}</b><small>${t[2]}</small></div>`).join("")}
+$("themes").onclick=e=>{const c=e.target.closest("[data-t]");if(!c)return;pending=c.dataset.t;setTheme(pending);themes()};
+$("tsw").onclick=async e=>{const i=e.target.closest("[data-th]");if(!i)return;pending=i.dataset.th;setTheme(pending);themes();const s=await POST("settings",{theme:pending});if(s)cfg=s;toast((TH.find(t=>t[0]==pending)||[])[1]+" theme applied.")};
+$("ap").onclick=async()=>{const s=await POST("settings",{theme:pending,sound:$("snd").checked,welcomed:!$("wl").checked});if(s)cfg=s;toast("Theme applied — console look changed successfully.")};
+function toast(t,bad){const e=$("toast");e.textContent=(bad?"":"✓ ")+t;e.style.borderColor=bad?"var(--err)":"var(--ok)";e.classList.add("on");setTimeout(()=>e.classList.remove("on"),3600)}
+function profUI(){const p=cfg.profiles.find(x=>x.name==cfg.active)||cfg.profiles[0];$("pn").textContent=p.name;$("av").textContent=p.name[0].toUpperCase();
+$("pm").innerHTML=cfg.profiles.map(x=>`<div data-n="${esc(x.name)}" class="${x.name==cfg.active?"cur":""}">${esc(x.name)}</div>`).join("")+'<div class="add">＋ New profile</div>'}
+function applyProf(){const p=cfg.profiles.find(x=>x.name==cfg.active);if(!p)return;$("num").value=p.number||"";if(p.root)$("root").value=p.root;$("clr").checked=p.clear!==false}
+$("prof").onclick=e=>{const d=e.target.closest("#pm div");if(!d){$("pm").classList.toggle("on");return}$("pm").classList.remove("on");
+if(d.classList.contains("add")){const n=(prompt("Profile name")||"").trim();if(!n)return;cfg.profiles.push({name:n,number:"",root:"",clear:true});cfg.active=n}else cfg.active=d.dataset.n;
+POST("settings",{profiles:cfg.profiles,active:cfg.active}).then(s=>{if(s){cfg=s;profUI();applyProf()}})};
+$("sp").onclick=async()=>{const p=cfg.profiles.find(x=>x.name==cfg.active);Object.assign(p,{number:$("num").value,root:$("root").value,clear:$("clr").checked});const s=await POST("settings",{profiles:cfg.profiles});if(s){cfg=s;toast("Profile saved.")}};
+$("dp").onclick=async()=>{if(cfg.profiles.length<2){toast("Keep at least one profile.",1);return}cfg.profiles=cfg.profiles.filter(x=>x.name!=cfg.active);const s=await POST("settings",{profiles:cfg.profiles,active:cfg.profiles[0].name});if(s){cfg=s;profUI();applyProf()}};
+$("br").onclick=async()=>{const r=await POST("browse");if(r&&r.path)$("root").value=r.path};
+async function boot(){try{pending=localStorage.getItem("tf-theme")||"classic"}catch(e){}setTheme(pending);cards(1);
+cfg=await API("settings");if(cfg){pending=cfg.theme;setTheme(pending);profUI();$("snd").checked=cfg.sound!==false;$("wl").checked=!cfg.welcomed;if(!cfg.welcomed||!kitSeen())kitOpen()}else{cfg={profiles:[{name:"Work"}],active:"Work"};if(!kitSeen())kitOpen()}
+await devs();if(cfg.profiles&&cfg.profiles[0].number!==undefined)applyProf();run2();checks();themes()}
+boot();try{if(window.CSS&&CSS.supports("backdrop-filter","url(#tf-liquid)"))document.documentElement.classList.add("lq-ok")}catch(e){}
+setInterval(devs,4000);setInterval(tick,800);setInterval(checks,6000);
+setInterval(()=>{$("clock").textContent=new Date().toLocaleString([], {month:"short",day:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"})},1000);
+</script></body></html>
