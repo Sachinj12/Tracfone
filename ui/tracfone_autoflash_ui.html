@@ -1,0 +1,396 @@
+<!-- Autoflash add-on page. Injected into tracfone_web_ui.html by backend/tracfone_autoflash_backend.py.
+     Uses the console's own classes and theme variables, so it follows Classic / Dark / Light / Royal Gold / Ocean etc. -->
+<style>
+#v-autoflash{overflow:auto;grid-template-rows:minmax(0,1fr)}
+#v-autoflash [hidden]{display:none!important}
+#v-autoflash .af-panel{width:100%;max-width:1180px;margin:0 auto;min-height:0;height:100%;display:flex;flex-direction:column;gap:10px}
+.af-sub{color:var(--m);font-size:12px}
+.af-bar{flex:none;height:6px;border-radius:99px;background:var(--bd);overflow:hidden}
+.af-bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--b1),var(--ac));box-shadow:0 0 12px color-mix(in srgb,var(--ac) 60%,transparent);transition:width .5s ease}
+.af-bar.bad i{background:var(--err);box-shadow:none}.af-bar.done i{background:var(--ok)}
+.af-snd{padding:3px 11px;font-size:12px;border-radius:99px}
+.af-snd.off{color:var(--m)}
+/* big alert, visible on EVERY page of the console while a phone waits for "Allow USB debugging" */
+#af-float{position:fixed;top:84px;left:50%;z-index:70;width:min(560px,92vw);transform:translateX(-50%);display:flex;gap:16px;align-items:center;padding:16px 20px;border-radius:20px;color:var(--t);background:var(--inp);border:2px solid var(--warn);box-shadow:0 22px 60px rgba(0,0,0,.34),0 0 0 8px color-mix(in srgb,var(--warn) 20%,transparent);animation:afin .35s cubic-bezier(.2,.9,.3,1.2),afhalo 1.4s ease-in-out infinite;backdrop-filter:blur(10px)}
+#af-float[hidden]{display:none}
+#af-float .ph1{position:relative;flex:none;width:58px;height:58px;border-radius:16px;display:grid;place-items:center;font-size:30px;background:linear-gradient(135deg,var(--warn),color-mix(in srgb,var(--warn) 55%,#000));box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}
+#af-float .ph1:before,#af-float .ph1:after{content:"";position:absolute;inset:-6px;border-radius:20px;border:2px solid var(--warn);opacity:0;animation:afring 1.6s ease-out infinite}
+#af-float .ph1:after{animation-delay:.8s}
+#af-float h3{margin:0 0 3px;font-size:17px;letter-spacing:.2px}
+#af-float p{margin:0;color:var(--m);font-size:12.5px;line-height:1.45}
+#af-float .stp2{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+#af-float .stp2 span{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:99px;font-size:12px;font-weight:700;border:1px solid var(--bd);background:var(--ch)}
+#af-float .stp2 em{font-style:normal;display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--warn);color:#fff;font-size:11px}
+@keyframes afin{from{opacity:0;transform:translate(-50%,-18px) scale(.94)}}
+@keyframes afhalo{50%{box-shadow:0 22px 60px rgba(0,0,0,.34),0 0 0 15px color-mix(in srgb,var(--warn) 6%,transparent)}}
+@keyframes afring{0%{opacity:.7;transform:scale(.85)}100%{opacity:0;transform:scale(1.5)}}
+.af-body{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(290px,380px) minmax(0,1fr);gap:14px}
+.af-side,.af-main{display:flex;flex-direction:column;gap:12px;min-height:0}
+.af-card{flex:none;padding:12px 14px;border:1px solid var(--bd);border-radius:14px;background:var(--inp);display:flex;flex-direction:column;gap:9px}
+.af-kind{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.af-kind button{padding:9px 6px;border-radius:12px;display:grid;gap:1px;justify-items:center;line-height:1.2}
+.af-kind button b{font-size:13px}
+.af-kind button small{color:var(--m);font-weight:500;font-size:10.5px}
+.af-kind button.on{border-color:var(--ac);background:var(--ch);box-shadow:0 0 0 3px var(--ch),0 6px 16px color-mix(in srgb,var(--ac) 22%,transparent);transform:translateY(-1px)}
+.af-path{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:center}
+.af-path input{font:12px Consolas,"Cascadia Mono",monospace}
+.af-opts{display:flex;flex-direction:column;gap:7px}
+.af-opts .sw{margin:0}
+.af-hint{margin:0;color:var(--m);font-size:11.5px;line-height:1.45}
+.af-tag{display:inline-block;font-size:9.5px;letter-spacing:.5px;font-weight:700;color:var(--m);border:1px solid var(--bd);border-radius:99px;padding:1px 8px;white-space:nowrap}
+.af-tag.ok{color:var(--ok);border-color:var(--ok)}.af-tag.bad{color:var(--err);border-color:var(--err)}.af-tag.run{color:var(--ac);border-color:var(--ac)}
+.af-devs{display:flex;flex-direction:column;gap:6px;max-height:30vh;overflow:auto;padding:2px 2px 2px 0}
+.af-dev{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:3px 10px;align-items:center;padding:8px 12px;border:1px solid var(--bd);border-radius:12px;cursor:pointer;background:var(--inp)}
+.af-dev.on{border-color:var(--ac);background:var(--ch)}
+.af-dev.sel{box-shadow:0 0 0 2px var(--ch)}
+.af-dev input{width:18px;height:18px;padding:0;accent-color:var(--ac);grid-row:1 / span 2}
+.af-dev .sn{font:600 12.5px Consolas,"Cascadia Mono",monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.af-dev .st{grid-column:2;font-size:11.5px;color:var(--m);line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.af-dev .st.ok{color:var(--ok)}.af-dev .st.bad{color:var(--err)}.af-dev .st.run{color:var(--ac)}.af-dev .st.warn{color:var(--warn)}
+.af-dev .rt{grid-column:3;grid-row:1 / span 2;display:flex;gap:6px;align-items:center}
+.af-dev .rt button{padding:3px 10px;font-size:12px}
+.af-dev .rt .stop{color:var(--err);border-color:var(--err)}
+.af-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.af-actions .go{flex:none;width:auto;padding:0 20px}
+.af-actions .go.arm{background:linear-gradient(180deg,rgba(255,255,255,.25),rgba(255,255,255,0) 52%),linear-gradient(var(--err),color-mix(in srgb,var(--err) 70%,#000))}
+.af-steps{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;position:relative;margin:2px 0}
+.af-steps div{position:relative;text-align:center;font-size:10.5px;line-height:1.25;color:var(--m);padding:7px 3px 6px;border-radius:11px;border:1px solid var(--bd);background:var(--inp);transition:.2s}
+.af-steps div i{display:grid;place-items:center;width:20px;height:20px;margin:0 auto 4px;border-radius:50%;font-style:normal;font-size:11px;font-weight:800;border:2px solid var(--bd);background:var(--pn);color:var(--m)}
+.af-steps .ok{color:var(--t);border-color:color-mix(in srgb,var(--ok) 55%,var(--bd))}.af-steps .ok i{background:var(--ok);border-color:var(--ok);color:#fff}
+.af-steps .skipped{opacity:.55}.af-steps .skipped i{border-style:dashed}
+.af-steps .running{color:var(--t);border-color:var(--ac);box-shadow:0 0 0 3px var(--ch),0 6px 16px color-mix(in srgb,var(--ac) 25%,transparent);transform:translateY(-2px)}
+.af-steps .running i{background:var(--ac);border-color:var(--ac);color:#fff;animation:afsp 1.1s ease-in-out infinite}
+.af-steps .failed,.af-steps .stopped{border-color:var(--err);color:var(--t)}.af-steps .failed i,.af-steps .stopped i{background:var(--err);border-color:var(--err);color:#fff}
+@keyframes afsp{50%{transform:scale(1.18)}}
+.af-out{display:flex;flex-direction:column;gap:8px;flex:1;min-height:0}
+.af-out .ph label{margin:0}
+.af-log{flex:1;min-height:110px;overflow:auto;border-radius:12px;background:var(--log);border:1px solid var(--bd);padding:12px;font:12.5px/1.6 Consolas,"Cascadia Mono",monospace;white-space:pre-wrap;word-break:break-word}
+.af-log .k{color:var(--ok)}.af-log .e{color:var(--err)}.af-log .w{color:var(--warn)}.af-log .s{color:var(--ac)}.af-log .m{color:var(--m)}
+@media(max-width:1000px){.af-body{grid-template-columns:1fr}.af-steps{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){#af-float,#af-float .ph1:before,#af-float .ph1:after,.af-steps .running i{animation:none!important}}
+</style>
+
+<div id="af-float" role="alertdialog" aria-live="assertive" aria-labelledby="af-ft" hidden>
+  <div class="ph1" aria-hidden="true">📱</div>
+  <div><h3 id="af-ft">Tap ALLOW on the phone now</h3>
+    <p id="af-fp">The phone is asking &ldquo;Allow USB debugging?&rdquo;. Android only accepts this on the phone itself. Autoflash continues by itself right after.</p>
+    <div class="stp2"><span><em>1</em> Tick &ldquo;Always allow from this computer&rdquo;</span><span><em>2</em> Tap ALLOW</span></div></div>
+</div>
+
+<div class="view" id="v-autoflash"><section class="panel box af-panel">
+  <div class="ph"><h2>AUTOFLASH</h2><span class="af-sub">Wipe &middot; flash &middot; skip setup &middot; Wi-Fi &middot; unlock &mdash; start from a phone that is switched on</span><span style="margin-left:auto"></span><button class="af-snd" id="af-snd" type="button" title="Beep when the phone needs you">🔔 Sound on</button><button class="af-snd" id="af-test" type="button" title="Play the alert sound once">Test beep</button></div>
+  <div class="af-bar" id="af-bar" aria-hidden="true"><i></i></div>
+  <div class="af-body">
+    <div class="af-side">
+      <div class="af-card">
+        <div class="ph"><label>BUILD TO FLASH</label></div>
+        <div class="af-kind" id="af-kind">
+          <button type="button" data-k="source"><b>Source</b><small>scenarios 2A &middot; 3 &middot; 4 &middot; 7</small></button>
+          <button type="button" data-k="target"><b>Target</b><small>scenario 9</small></button>
+        </div>
+        <div><label for="af-p-source">SOURCE BUILD FOLDER</label><div class="af-path"><input id="af-p-source" placeholder="C:\Builds\source (contains flashall.bat)" spellcheck="false" autocomplete="off"><button type="button" data-pick="source">Browse</button></div></div>
+        <div><label for="af-p-target">TARGET BUILD FOLDER</label><div class="af-path"><input id="af-p-target" placeholder="C:\Builds\target (contains flashall.bat)" spellcheck="false" autocomplete="off"><button type="button" data-pick="target">Browse</button></div></div>
+      </div>
+      <div class="af-card">
+        <div class="ph"><label>STEPS</label><span class="af-tag" id="af-wifi-tag" style="margin-left:auto"></span></div>
+        <div class="af-opts">
+          <label class="sw"><input type="checkbox" id="af-o-erase"> Erase first &mdash; fastboot -w + erase frp</label>
+          <label class="sw"><input type="checkbox" id="af-o-skip"> Skip setup wizard (English)</label>
+          <label class="sw"><input type="checkbox" id="af-o-wifi"> Connect the default Wi-Fi</label>
+          <label class="sw"><input type="checkbox" id="af-o-fin"> Wi-Fi off + swipe up the lock screen</label>
+        </div>
+        <p class="af-hint">The phone can be on: it is rebooted to fastboot automatically. After the flash you tap <b>Allow</b> once on the phone; everything else runs by itself.</p>
+      </div>
+    </div>
+    <div class="af-main">
+      <div class="af-card">
+        <div class="ph"><label>PHONES</label><span class="af-tag" id="af-count"></span><span style="margin-left:auto"></span><button id="af-rf" type="button" title="Refresh phones" aria-label="Refresh phones">⟳</button><button id="af-all" type="button">Select all</button><button id="af-none" type="button">Clear</button></div>
+        <div class="af-devs" id="af-devs"></div>
+        <div class="af-actions">
+          <button class="go" id="af-go" type="button" disabled>▶ Start Autoflash</button>
+          <span class="af-hint" id="af-hint">Tick the phones to flash.</span>
+        </div>
+      </div>
+      <div class="af-steps" id="af-steps"></div>
+      <div class="af-out">
+        <div class="ph"><label id="af-logfor">OUTPUT</label><span style="margin-left:auto"></span><button id="af-copy" type="button">Copy</button><button id="af-clr" type="button">Clear</button></div>
+        <div class="af-log" id="af-log" role="log" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+</section></div>
+
+<script>
+(function () {
+  'use strict';
+  var v = document.getElementById('v-autoflash'), nav = document.querySelector('nav');
+  if (!v || !nav || window.__afLoaded) return;
+  window.__afLoaded = true;
+  var setv = document.getElementById('v-set');                       // sit next to the other pages
+  if (setv && setv.parentNode) setv.parentNode.insertBefore(v, setv.nextSibling);
+
+  var API = '/api/autoflash';
+  var S = { cfg: {}, phones: [], steps: [], checked: {}, jobs: {}, sel: null, timer: null, jtimer: null, armed: null, saveT: null, confirm: 'FLASH', shown: {} };
+  function q(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function toast(t, bad) { if (window.toast) try { window.toast(t, bad); } catch (e) {} }
+
+  function api(method, path, body) {
+    var o = { method: method, headers: {} };
+    if (method === 'POST') { o.headers['X-Autoflash'] = '1'; o.headers['Content-Type'] = 'application/json'; o.body = JSON.stringify(body || {}); }
+    return fetch(API + path, o).then(function (r) {
+      return r.json().catch(function () { return null; }).then(function (d) {
+        if (!r.ok) throw new Error((d && d.error) || ('HTTP ' + r.status));
+        return d;
+      });
+    });
+  }
+
+  /* ---------- config ---------- */
+  function paintCfg() {
+    var c = S.cfg;
+    [].forEach.call(q('af-kind').children, function (b) { b.classList.toggle('on', b.dataset.k === c.kind); });
+    if (document.activeElement !== q('af-p-source')) q('af-p-source').value = c.source_build || '';
+    if (document.activeElement !== q('af-p-target')) q('af-p-target').value = c.target_build || '';
+    q('af-o-erase').checked = !!c.erase; q('af-o-skip').checked = !!c.skip_setup;
+    q('af-o-wifi').checked = !!c.wifi; q('af-o-fin').checked = !!c.finish;
+  }
+  function saveCfg() {
+    clearTimeout(S.saveT);
+    S.saveT = setTimeout(function () {
+      api('POST', '/config', S.cfg).then(function (d) { S.cfg = d.config; }).catch(function (e) { toast(e.message, 1); });
+    }, 350);
+  }
+  q('af-kind').onclick = function (e) { var b = e.target.closest('button'); if (!b) return; S.cfg.kind = b.dataset.k; paintCfg(); saveCfg(); disarm(); };
+  q('af-p-source').oninput = function () { S.cfg.source_build = this.value; saveCfg(); };
+  q('af-p-target').oninput = function () { S.cfg.target_build = this.value; saveCfg(); };
+  [['af-o-erase', 'erase'], ['af-o-skip', 'skip_setup'], ['af-o-wifi', 'wifi'], ['af-o-fin', 'finish']].forEach(function (p) {
+    q(p[0]).onchange = function () { S.cfg[p[1]] = this.checked; saveCfg(); disarm(); };
+  });
+  v.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-pick]'); if (!b) return;
+    b.disabled = true;
+    api('POST', '/pick', { which: b.dataset.pick }).then(function (d) {
+      S.cfg = d.config; paintCfg(); if (d.folder) toast('Folder saved.');
+    }).catch(function (er) { toast(er.message, 1); }).then(function () { b.disabled = false; });
+  });
+
+  /* ---------- log ---------- */
+  var logEl = q('af-log');
+  function colour(t) {
+    if (/✗|FAILED|failed|error|Error|not found/.test(t)) return 'e';
+    if (/^\S+\s+━━━|STEP \d/.test(t)) return 's';
+    if (/READY|✅|connected|is up|is in fastboot|Wipe done|is off/.test(t)) return 'k';
+    if (/>>> ON THE PHONE|Stop|■|still|WARNING|⚠/.test(t)) return 'w';
+    return '';
+  }
+  function addLines(lines) {
+    lines.forEach(function (t) { var d = document.createElement('div'); var c = colour(t); if (c) d.className = c; d.textContent = t; logEl.appendChild(d); });
+    if (lines.length) logEl.scrollTop = logEl.scrollHeight;
+  }
+  q('af-clr').onclick = function () { logEl.innerHTML = ''; };
+  q('af-copy').onclick = function () { if (navigator.clipboard) navigator.clipboard.writeText(logEl.innerText).then(function () { toast('Log copied.'); }); };
+
+  /* ---------- phones ---------- */
+  function jobOf(p) { return S.jobs[p.job_id || p.last_job_id] || null; }
+  function runningCount() { return S.phones.filter(function (p) { return p.job_id; }).length; }
+  function stepText(j) {
+    if (!j) return '';
+    var run = j.steps.filter(function (s) { return s.status === 'running'; })[0];
+    if (j.status === 'running') return j.waiting_allow ? 'Waiting for you: tap ALLOW on the phone' : (run ? 'Step ' + (j.steps.indexOf(run) + 1) + ' of 7 · ' + run.name : 'Starting…');
+    if (j.status === 'done') return 'Done in ' + j.seconds + ' s — ready';
+    if (j.status === 'stopped') return 'Stopped';
+    var f = j.steps.filter(function (s) { return s.status === 'failed'; })[0];
+    return 'Failed' + (f ? ' at ' + f.name : '');
+  }
+  function paintPhones() {
+    var box = q('af-devs');
+    q('af-count').textContent = S.phones.length + ' found';
+    if (!S.phones.length) { box.innerHTML = '<div class="af-hint">No phone found. Connect one with USB debugging on.</div>'; paintGo(); return; }
+    box.innerHTML = S.phones.map(function (p) {
+      var j = jobOf(p), run = !!p.job_id;
+      var cls = !j ? '' : (j.status === 'running' ? (j.waiting_allow ? 'warn' : 'run') : j.status === 'done' ? 'ok' : 'bad');
+      var line = j ? stepText(j) : (p.state === 'ADB' ? 'On · ready' : p.state === 'FASTBOOT' ? 'In fastboot · ready' : p.state === 'UNAUTHORIZED' ? 'Unauthorised — allow USB debugging on the phone' : p.state);
+      var can = !run && (p.state === 'ADB' || p.state === 'FASTBOOT');
+      return '<div class="af-dev' + (S.checked[p.serial] ? ' on' : '') + (S.sel === p.serial ? ' sel' : '') + '" data-s="' + esc(p.serial) + '">' +
+        '<input type="checkbox" aria-label="Select ' + esc(p.serial) + '"' + (S.checked[p.serial] ? ' checked' : '') + (can ? '' : ' disabled') + '>' +
+        '<span class="sn">' + esc(p.serial) + '</span><span class="rt">' + (run ? '<button class="stop" type="button" data-stop="' + esc(p.serial) + '">■ Stop</button>' : '') + '<span class="af-tag ' + (run ? 'run' : '') + '">' + esc(p.state) + '</span></span>' +
+        '<span class="st ' + cls + '">' + esc(line) + '</span></div>';
+    }).join('');
+    paintGo();
+  }
+  q('af-devs').onclick = function (e) {
+    var st = e.target.closest('[data-stop]');
+    if (st) { api('POST', '/stop', { serial: st.dataset.stop }).catch(function (er) { toast(er.message, 1); }); return; }
+    var row = e.target.closest('.af-dev'); if (!row) return;
+    var s = row.dataset.s;
+    if (e.target.tagName === 'INPUT') { S.checked[s] = e.target.checked; disarm(); }
+    else { showJob(s); }
+    paintPhones();
+  };
+  q('af-all').onclick = function () { S.phones.forEach(function (p) { if (!p.job_id && (p.state === 'ADB' || p.state === 'FASTBOOT')) S.checked[p.serial] = true; }); disarm(); paintPhones(); };
+  q('af-none').onclick = function () { S.checked = {}; disarm(); paintPhones(); };
+  q('af-rf').onclick = function () { load(); };
+
+  /* ---------- start (two clicks: it erases the phone) ---------- */
+  function picked() { return S.phones.filter(function (p) { return S.checked[p.serial] && !p.job_id && (p.state === 'ADB' || p.state === 'FASTBOOT'); }).map(function (p) { return p.serial; }); }
+  function disarm() { S.armed = null; paintGo(); }
+  function paintGo() {
+    var go = q('af-go'), n = picked().length, kind = (S.cfg.kind || 'source').toUpperCase();
+    go.disabled = !n;
+    go.classList.toggle('arm', !!S.armed);
+    go.textContent = S.armed ? ('⚠ Click again to ' + (S.cfg.erase ? 'ERASE & ' : '') + 'FLASH ' + n + ' phone' + (n > 1 ? 's' : '')) : '▶ Start Autoflash';
+    q('af-hint').textContent = !n ? 'Tick the phones to flash.' : (S.armed ? 'This wipes the phone(s) and flashes the ' + kind + ' build.' : n + ' phone' + (n > 1 ? 's' : '') + ' · ' + kind + ' build');
+  }
+  q('af-go').onclick = function () {
+    var serials = picked(); if (!serials.length) return;
+    if (!S.armed) { S.armed = setTimeout(disarm, 7000); paintGo(); return; }
+    clearTimeout(S.armed); S.armed = null;
+    api('POST', '/start', { serials: serials, kind: S.cfg.kind, confirm: S.confirm, options: { erase: S.cfg.erase, skip_setup: S.cfg.skip_setup, wifi: S.cfg.wifi, finish: S.cfg.finish } })
+      .then(function (d) {
+        S.checked = {};
+        d.jobs.forEach(function (j) { S.jobs[j.job_id] = { id: j.job_id, serial: j.serial, status: 'running', steps: S.steps.map(function (n) { return { name: n, status: 'pending' }; }), next: 0, seconds: 0 }; });
+        showJob(d.jobs[0].serial, true);
+        toast('Autoflash started.'); load();
+      }).catch(function (e) { toast(e.message, 1); paintGo(); });
+  };
+
+  /* ---------- jobs ---------- */
+  function showJob(serial, fresh) {
+    S.sel = serial;
+    logEl.innerHTML = ''; S.shown = {};
+    var p = S.phones.filter(function (x) { return x.serial === serial; })[0];
+    var id = p && (p.job_id || p.last_job_id);
+    if (!id) { for (var k in S.jobs) if (S.jobs[k].serial === serial) id = k; }
+    S.selJob = id || null;
+    q('af-logfor').textContent = 'OUTPUT' + (serial ? ' — ' + serial : '');
+    if (id && S.jobs[id]) S.jobs[id].next = 0;
+    pollJobs(true); paintSteps(); paintBar();
+  }
+  function paintSteps() {
+    var j = S.selJob && S.jobs[S.selJob];
+    var names = S.steps.length ? S.steps : ['Fastboot', 'Wipe', 'Flash', 'Boot + USB allow', 'Skip setup', 'Default Wi-Fi', 'Wi-Fi off + unlock'];
+    q('af-steps').innerHTML = names.map(function (n, i) {
+      var st = j && j.steps && j.steps[i] ? j.steps[i].status : 'pending';
+      var mark = st === 'ok' ? '✓' : st === 'failed' || st === 'stopped' ? '✕' : st === 'skipped' ? '–' : (i + 1);
+      return '<div class="' + st + '"><i>' + mark + '</i>' + esc(n) + '</div>';
+    }).join('');
+  }
+  function pollJobs(force) {
+    var ids = {};
+    S.phones.forEach(function (p) { if (p.job_id) ids[p.job_id] = 1; });
+    if (S.selJob) ids[S.selJob] = S.selJob in ids ? 1 : (S.jobs[S.selJob] && S.jobs[S.selJob].status !== 'running' && !force ? 0 : 1);
+    Object.keys(ids).forEach(function (id) {
+      if (!ids[id]) return;
+      var cur = S.jobs[id] || { next: 0 };
+      api('GET', '/job?id=' + encodeURIComponent(id) + '&since=' + (cur.next || 0)).then(function (j) {
+        var was = cur.status;
+        if (id === S.selJob) addLines(j.lines);
+        j.lines = null;
+        S.jobs[id] = j;
+        if (id === S.selJob) { paintSteps(); paintBar(); }
+        paintAllow();
+        if (was === 'running' && j.status !== 'running') { load(); toast(j.serial + ': ' + (j.status === 'done' ? 'Autoflash finished.' : 'Autoflash ' + j.status + '.'), j.status !== 'done'); }
+      }).catch(function () {});
+    });
+    paintAllow();
+  }
+  /* ---------- "tap Allow on the phone": big alert on every page + beep + tab-title flash ---------- */
+  var snd = { on: true, ctx: null, t: null, title: document.title, flash: null };
+  try { snd.on = localStorage.getItem('af_sound') !== '0'; } catch (e) {}
+  function paintSnd() { var b = q('af-snd'); b.textContent = snd.on ? '🔔 Sound on' : '🔕 Sound off'; b.classList.toggle('off', !snd.on); }
+  function audio() {
+    try { snd.ctx = snd.ctx || new (window.AudioContext || window.webkitAudioContext)(); if (snd.ctx.state === 'suspended') snd.ctx.resume(); } catch (e) { snd.ctx = null; }
+    return snd.ctx;
+  }
+  function beep() {
+    var c = audio(); if (!c) return;
+    [0, .26, .52].forEach(function (d, i) {
+      var o = c.createOscillator(), g = c.createGain(), t = c.currentTime + d;
+      o.type = 'sine'; o.frequency.value = i === 1 ? 1320 : 990;
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(.35, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + .2);
+      o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + .22);
+    });
+  }
+  q('af-snd').onclick = function () { snd.on = !snd.on; try { localStorage.setItem('af_sound', snd.on ? '1' : '0'); } catch (e) {} paintSnd(); if (snd.on) beep(); };
+  q('af-test').onclick = beep;
+  paintSnd();
+  function waiting() {
+    return Object.keys(S.jobs).map(function (k) { return S.jobs[k]; }).filter(function (j) { return j.status === 'running' && j.waiting_allow; });
+  }
+  function paintAllow() {
+    var w = waiting(), fl = q('af-float'), on = w.length > 0;
+    if (on) q('af-ft').textContent = w.length > 1 ? 'Tap ALLOW on ' + w.length + ' phones now' : 'Tap ALLOW on the phone now' + (w[0].serial ? ' (' + w[0].serial + ')' : '');
+    if (on && fl.hidden) { fl.hidden = false; if (snd.on) beep(); }
+    if (!on && !fl.hidden) fl.hidden = true;
+    if (on && !snd.t) {
+      snd.t = setInterval(function () { if (snd.on) beep(); }, 4000);
+      snd.flash = setInterval(function () { document.title = document.title === snd.title ? '📱 TAP ALLOW ON PHONE' : snd.title; }, 900);
+    }
+    if (!on && snd.t) { clearInterval(snd.t); clearInterval(snd.flash); snd.t = snd.flash = null; document.title = snd.title; }
+  }
+  function paintBar() {
+    var j = S.selJob && S.jobs[S.selJob], bar = q('af-bar'), pct = 0;
+    if (j && j.steps) {
+      var done = j.steps.filter(function (s) { return s.status === 'ok' || s.status === 'skipped'; }).length;
+      var run = j.steps.some(function (s) { return s.status === 'running'; });
+      pct = Math.round((done + (run ? .5 : 0)) / j.steps.length * 100);
+      if (j.status === 'done') pct = 100;
+    }
+    bar.firstElementChild.style.width = pct + '%';
+    bar.className = 'af-bar' + (j && j.status === 'failed' ? ' bad' : j && j.status === 'done' ? ' done' : '');
+  }
+
+  /* ---------- load ---------- */
+  function load() {
+    return api('GET', '/state').then(function (d) {
+      S.cfg = d.config; S.steps = d.steps; S.confirm = d.confirm;
+      S.phones = d.phones;
+      q('af-wifi-tag').textContent = d.default_wifi ? 'Wi-Fi: ' + d.default_wifi : 'No default Wi-Fi';
+      q('af-wifi-tag').className = 'af-tag ' + (d.default_wifi ? 'ok' : 'bad');
+      if (document.activeElement.tagName !== 'INPUT' || document.activeElement.type === 'checkbox') paintCfg();
+      if (!S.sel && S.phones.length) {
+        var p = S.phones.filter(function (x) { return x.job_id; })[0] || S.phones.filter(function (x) { return x.last_job_id; })[0];
+        if (p) showJob(p.serial);
+      }
+      paintPhones(); paintSteps(); paintBar();
+      if (runningCount()) startBg(); 
+    }).catch(function (e) { q('af-devs').innerHTML = '<div class="af-hint" style="color:var(--err)">' + esc(e.message) + '</div>'; });
+  }
+
+  /* ---------- nav tab (right after Wi-Fi) ---------- */
+  var btn = document.createElement('button');
+  btn.dataset.v = 'autoflash';
+  btn.innerHTML = '<b><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></b>Autoflash';
+  function place() {
+    var w = nav.querySelector('[data-v="wifi"]'), dev = nav.querySelector('[data-v="dev"]'), set = nav.querySelector('[data-v="set"]');
+    if (w) nav.insertBefore(btn, w.nextSibling); else if (dev) nav.insertBefore(btn, dev.nextSibling); else nav.insertBefore(btn, set || null);
+  }
+  place();
+  window.addEventListener('load', place);                           // the Wi-Fi tab may be added after ours: keep Autoflash right after it
+
+  /* keeps watching while a run is active, even when another page of the console is open */
+  function startBg() {
+    if (S.bg) return;
+    S.bg = setInterval(function () {
+      if (v.classList.contains('on')) return;                       // the page's own timers are running
+      load().then(function () { pollJobs(false); if (!runningCount() && !waiting().length) { clearInterval(S.bg); S.bg = null; } });
+    }, 2500);
+  }
+  function open() {
+    load();
+    clearInterval(S.timer); clearInterval(S.jtimer);
+    S.timer = setInterval(function () { if (!S.armed) load(); }, 4000);
+    S.jtimer = setInterval(function () { pollJobs(false); }, 1200);
+  }
+  function close() { clearInterval(S.timer); clearInterval(S.jtimer); S.timer = S.jtimer = null; }
+  nav.addEventListener('click', function (e) {                      // the console's own handler has already switched the other pages
+    var b = e.target.closest('[data-v]'); if (!b) return;
+    var on = b.dataset.v === 'autoflash';
+    v.classList.toggle('on', on);
+    if (on) open(); else close();
+  });
+  paintSteps();
+  load();                                                           // pick up a run that is already going (page reload)
+})();
+</script>

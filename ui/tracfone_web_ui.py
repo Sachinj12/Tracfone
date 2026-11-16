@@ -109,6 +109,8 @@ try: import tracfone_devsetup_backend as DV; DV.install(sys.modules[__name__])  
 except Exception as _e: print("Device Setup add-on not loaded:", _e)
 try: import tracfone_wifimgr_backend as WMG; WMG.install(sys.modules[__name__])   # Wi-Fi Manager add-on (optional)
 except Exception as _e: print("Wi-Fi Manager add-on not loaded:", _e)
+try: import tracfone_autoflash_backend as AF; AF.install(sys.modules[__name__])   # Autoflash add-on (optional)
+except Exception as _e: print("Autoflash add-on not loaded:", _e)
 
 
 if __name__ == "__main__":
